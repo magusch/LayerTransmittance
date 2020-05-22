@@ -2,11 +2,11 @@ import pandas as pd
 import numpy as np
 from scipy.interpolate import interp1d
 
-from LayPd import calculation
+from app.LayPd import calculation
 
 
 def datas(material): #load materil's refractive index 
-	return(pd.read_csv('static/data/%s.csv' %(material), sep=';'))
+	return(pd.read_csv('app/static/data/%s.csv' %(material), sep=';'))
 
 def interpolate(dts): #interpolate several datas with wvs
 	wv_len=[len(dt['wv']) for dt in dts] #len of datas

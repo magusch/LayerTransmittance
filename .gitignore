@@ -1,5 +1,5 @@
 .trans_venv/
-/static/plot
+app/static/plot
 
 
 # Created by https://www.gitignore.io/api/venv,flask,python

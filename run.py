@@ -4,13 +4,17 @@ from werkzeug.utils import secure_filename
 
 from forms import General_form, Angle_form,Layer_Form,wavelength_form
 
-from t8data import launch
+from app.t8data import launch
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='app/static/')
 
-app.config['WTF_CSRF_ENABLED'] = False
+app.config.update(
+    UPLOADED_PATH=os.path.join(basedir, 'app/static/plot'),
+    static_folder='app/static/',
+    WTF_CSRF_ENABLED= False )
+#app.config['WTF_CSRF_ENABLED'] = False
 
 def layers(n=3):
     layer_form=[]
@@ -36,6 +40,8 @@ def wavelenght():
         #z=layers_forms.data
         #ans, mat, image_path=takedata(q,z)
         ans, mat, image_path=launch(general_data, layer_form_data, wv_data, wit='wv')
+        image_path=url_for('static', filename='plot/'+image_path)
+        #image_path='app/'+image_path
         return render_template('answer.html', q=ans, mat=mat, IMAGE=image_path)
         #return render_template('answer.html', general=general_data, layers=layer_form_data, additional=wv_data )
 
@@ -73,6 +79,7 @@ def angle():
         for i in range(len(layers_forms)):
             layer_form_data[i]=layers_forms[i].data
         ans,mat,image_path=launch(general_data, layer_form_data, angle_data, wit='angle')
+        image_path=url_for('static', filename='plot/'+image_path)
         return render_template('answer.html', q=ans, mat=mat, IMAGE=image_path)
         #return render_template('answer.html', general=general_data, layers=layer_form_data, additional=angle_data )
         #flash('Material: {}, d={}'.format(

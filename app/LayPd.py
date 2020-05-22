@@ -17,7 +17,7 @@ def Propusk(parametrs,d,teta):
 	wv=parametrs['wv']
 	n,k=parametrs['n'],parametrs['k']
 	amountoflayers=parametrs['amountoflayers']
-	print(parametrs)
+	#print(parametrs)
 	r,t,be={},{},{}
 
 
@@ -71,9 +71,9 @@ def Propusk(parametrs,d,teta):
 	Transmission=(1/M[0][0])
 	output={'R':Reflection, 'T':np.real(Transmission)}
 
-	print('_______')
-	print(np.max(Reflection))
-	print('\n')
+	#print('_______')
+	#print(np.max(Reflection))
+	#print('\n')
 
 	return output, wv
 
@@ -177,12 +177,14 @@ def calculation(parametrs):
 	str_title=title2str(parametrs['title'])
 	plt.title(str_title)
 	plt.legend( ) #title=parametrs['title']
-	image_path='static/plot/'+str(int(time.time())) +'.png'
+	filename=str(int(time.time())) +'.png'
+	image_path='app/static/plot/'+filename
+	#print(image_path)
 	plt.savefig(image_path)
 	
 
 	plt.clf() #delete plot
-	return(wv,output,image_path)
+	return(wv,output,filename)
 	#plt.show()
 
 	# figfile = BytesIO() #save in byte, not in file
