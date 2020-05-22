@@ -39,10 +39,11 @@ def wavelenght():
         #q=form.data
         #z=layers_forms.data
         #ans, mat, image_path=takedata(q,z)
-        ans, mat, image_path=launch(general_data, layer_form_data, wv_data, wit='wv')
+        wv, output_csv,  image_path=launch(general_data, layer_form_data, wv_data, wit='wv')
         image_path=url_for('static', filename='plot/'+image_path)
+        #output_csv=url_for('static', filename='plot/'+output_csv)
         #image_path='app/'+image_path
-        return render_template('answer.html', q=ans, mat=mat, IMAGE=image_path)
+        return render_template('answer.html', output_csv=output_csv, mat=wv, IMAGE=image_path)
         #return render_template('answer.html', general=general_data, layers=layer_form_data, additional=wv_data )
 
     return render_template('submit.html', form=form, layer_form=layers_forms, wv_form=wv_form)   
@@ -78,9 +79,9 @@ def angle():
         layer_form_data={}
         for i in range(len(layers_forms)):
             layer_form_data[i]=layers_forms[i].data
-        ans,mat,image_path=launch(general_data, layer_form_data, angle_data, wit='angle')
+        mat,output_csv,image_path=launch(general_data, layer_form_data, angle_data, wit='angle')
         image_path=url_for('static', filename='plot/'+image_path)
-        return render_template('answer.html', q=ans, mat=mat, IMAGE=image_path)
+        return render_template('answer.html', output_csv=output_csv, mat=mat, IMAGE=image_path)
         #return render_template('answer.html', general=general_data, layers=layer_form_data, additional=angle_data )
         #flash('Material: {}, d={}'.format(
         #    mat, d))

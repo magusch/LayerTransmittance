@@ -2,6 +2,12 @@
 <center><a href='/'><h3>Зависимость от длины волны</h3></a><a href='/angle'><h3>Зависимость от угла</h3></a></center>
 	<img src="{{IMAGE}}"><p>
 	<p>
+		Скачать в формате CSV:<p>
+	{% for name,url in output_csv.items() %}	
+	<b>{{name}}:</b> <a href={{url_for('static', filename='plot/'+url)}} download>Скачать </a>
+	<p>
+	{% endfor %}
+
 <!--		<b> {{q}} </b>
 	<b> {{mat}} </b> -->
 		

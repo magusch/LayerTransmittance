@@ -1,13 +1,13 @@
-import pandas as pd
 import numpy as np
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 import time
-from io import BytesIO
+#from io import BytesIO
 
 pi=np.pi
 j=1j
 ylab={'R':'Коэффициент отражения', 'T':'Коэффициент пропускания'}
+output_url={}
 
 import matplotlib
 matplotlib.use('agg')
@@ -91,7 +91,6 @@ def het(d, parametrs, height={}, o=1):  #height - dict for calculation; d – di
         try:
             wv,output=het(d,parametrs, height, o+1)
         except:
-
             if parametrs['wit']=='angle':
             	wv,output=calc_on_teta(height, **parametrs)
             else:
@@ -107,10 +106,19 @@ def calc_on_wv(height, **parametrs): #dependecy of wv with loop for list of angl
 		output, wv= Propusk(parametrs,height,teta)
 		labl=labels_good(title,parametrs, height, teta)
 
+		# save_file=np.vstack([['wv', 'R', 'T'], np.array([wv,output['R'],output['T']]).transpose()])
+
+		# filename=str(time.time()) +'.csv'
+		# csv_path='app/static/plot/'+filename
+
+		# np.savetxt(csv_path, save_file, delimiter=";",fmt='%s')
+		
 		plt.plot(wv,output[parametrs['y_label']], label=labl)
 		plt.xlabel('Длина Волны, нм')
+		
+		output_url.update(output_urls(parametrs, wv, output, labl))
 
-	return(wv,output)
+	return(wv,output_url)
 	
 
 def calc_on_teta(height, **parametrs): #dependecy of angle
@@ -119,13 +127,34 @@ def calc_on_teta(height, **parametrs): #dependecy of angle
 	labl=labels_good(title,parametrs, height, angle)
 
 	output, wv= Propusk(parametrs,height,angle)
-	
 	angle_inDegree=angle*360/(2*pi)
+	save_file=np.array([angle_inDegree,output['R']]).transpose()
+	np.savetxt("foo.csv", save_file, delimiter=";")
 	plt.plot(angle_inDegree,output[parametrs['y_label']],label=labl) #(angle*360/(2*pi))
 	plt.xlabel('Угол, градусы')
 
-	return(wv,output)
+
+
+	output_url.update(output_urls(parametrs, angle_inDegree, output,labl))
+
+
+
+	return(wv,output_url)
 	
+
+
+def output_urls(parametrs, X, output,labl):
+
+	save_file=np.vstack([[parametrs['wit'], 'R', 'T'], np.array([X,output['R'],output['T']]).transpose()])
+
+	filename=str(time.time()) +'.csv'
+	csv_path='app/static/plot/'+filename
+
+	np.savetxt(csv_path, save_file, delimiter=";",fmt='%s')
+	if labl=='':
+		labl=title2str(parametrs['title'])
+	output_url[labl]=filename
+	return output_url
 
 def labels_good(title,parametrs, height, teta): #angle, height, n0, n_last
 	labels={} #str??
@@ -167,6 +196,8 @@ def title2str(title): #dict title to string
 
 
 def calculation(parametrs):
+	global output_url
+	output_url={}
 	aol=parametrs['amountoflayers']
 	n_last=parametrs['n'][aol]
 	d=parametrs['d']
@@ -178,14 +209,14 @@ def calculation(parametrs):
 	str_title=title2str(parametrs['title'])
 	plt.title(str_title)
 	plt.legend( ) #title=parametrs['title']
-	filename=str(int(time.time())) +'.png'
-	image_path='app/static/plot/'+filename
+	filename_plot=str(int(time.time())) +'.png'
+	image_path='app/static/plot/'+filename_plot
 	#print(image_path)
 	plt.savefig(image_path)
 	
 
 	plt.clf() #delete plot
-	return(wv,output,filename)
+	return(wv,output,filename_plot)
 	#plt.show()
 
 	# figfile = BytesIO() #save in byte, not in file
