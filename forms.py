@@ -15,7 +15,7 @@ class General_form(FlaskForm):
     
 class Layer_Form(FlaskForm):
     d = StringField('d, nm', default='50')
-    material=SelectField('What is first material', choices=[('empty','Empty'),('Ag', 'Ag'),('Zn', 'Zn'), ('Al','Al'), ('Au','Au'), ('ZnO','ZnO')], default='Zn')
+    material=SelectField('What is material', choices=[('empty','Empty'),('Ag', 'Ag'),('Zn', 'Zn'), ('Al','Al'), ('Au','Au'), ('ZnO','ZnO')], default='Zn')
     n=FloatField('n', default=1)
     k=FloatField('k', default=0)
 
