@@ -10,7 +10,7 @@ class General_form(FlaskForm):
     n_last=StringField('n for last layer', default=1)
     #wv=StringField('Wavelength, nm')
     polarization=RadioField("What's polarization", choices=[('S','s-polarization'),('P','p-polarization')], default='S')
-    y_label=RadioField('Reflection or Transmintence', choices=[('R','Reflection'),('T','Transmince')], default='R')
+    y_label=RadioField('Reflection or Transmintence', choices=[('R','Reflection'),('T','Transmittance')], default='R')
 
     
 class Layer_Form(FlaskForm):

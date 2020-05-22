@@ -1,6 +1,27 @@
 <head>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 	<style type="text/css">
+    ul {
+      list-style-type: none;
+
+    }
+     .container {
+      display: flex;
+      margin: auto;
+    }
+
+
+    h1 {
+      text-align: left;
+      margin-left: 40px;
+      margin-right: 20px;
+    }
+    
+    .menu {
+      padding-left: 40px;
+      text-align: center;
+
+    }
 		.general {
 			padding-top: 25px;
 			margin-left: auto;
@@ -9,17 +30,21 @@
 		}
 
 	</style>
-</head>	
-<body><form method="POST" class='general' action="/">
-<center><a href='/'><h3>Зависимость от длины волны</h3></a><a href='/angle'><h3>Зависимость от угла</h3></a></center>
+ <title>Transmittance - Wavelenght dependence</title>
+</head>
 
+<body>
+ <div class='container'> <h1> Wavelenght dependence </h1><p>
+
+<div class='menu'> <a href='/'><h3>Зависимость от длины волны</h3></a><a href='/angle'><h3>Зависимость от угла</h3></a></center></p></div></div>
+  <form method="POST" class='general' action="/">
 
 <!-- General form -->
 {{form.hidden_tag()}}
    	<p>
    <b> {{ form.n0.label }} </b>
    <p>{{ form.n0(size=20) }}<p>
-   	  <b>{{ form.n_last.label }}:</b><p>{{ form.n_last(size=20) }}
+   	  <b>{{ form.n_last.label }}:</b><p>{{ form.n_last(size=20) }} <i> (one or several)</i>
     <p> <b>Polarazation:</b><p>
     	{{ form.polarization }}
     <p>
@@ -28,40 +53,22 @@
 
 <!-- Wavelength form -->
 
-<b>{{wv_form.angle.label}}:</b> &#8195; {{wv_form.angle}}
+<b>{{wv_form.angle.label}}:</b> &#8195; {{wv_form.angle}} <i> (one or several)</i>
 
 <!-- Layer form -->
-
+<p>
 {% for form_lay in layer_form %}
 {{ form_lay.hidden_tag() }}
 
 <h3>Layer {{loop.index}}</h3> <p>
-<b>{{form_lay.material.label}}:</b> &#8195;{{form_lay.material}}  <p>
-<b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <p><p>
+<b>{{form_lay.material.label}}:</b> &#8195;{{form_lay.material}}  &#8195;
+<b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <i> (one or several)</i><p><p>
 	
 {% endfor %}
 
-__________________
 <input id="submit" name="submit" type="submit" >
 </form>
 
 
-
-
-
-
-
-
-
-
- {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul>
-    {% for message in messages %}
-        <li>{{ message }} </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
 
 </body>

@@ -1,6 +1,38 @@
-<h1>HI </h1>
+<html><head><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <style type="text/css">
+        ul {
+      list-style-type: none;
+    }
+    .container {
+      display: flex;
+      margin: auto;
+    }
 
-<center><a href='/'><h3>Зависимость от длины волны</h3></a><a href='/angle'><h3>Зависимость от угла</h3></a></center>
+
+    h1 {
+      text-align: left;
+      margin-left: 40px;
+      margin-right: 20px;
+    }
+    
+    .menu {
+      padding-left: 40px;
+      text-align: center;
+
+    }
+    .general {
+      padding-top: 25px;
+      margin-left: auto;
+      padding-left: 40px;
+      padding-right: auto;
+    }
+
+  </style>
+ <title>Transmittance - Angle dependence</title>
+</head>
+<div class='container'>
+<h1> Angle dependence </h1>
+<div class='menu'><a href='/'><h3>Зависимость от длины волны</h3></a><a href='/angle'><h3>Зависимость от угла</h3></a></div></div>
 <p><form method="POST" class='general'>
 
 <!-- General form -->
@@ -8,7 +40,7 @@
    	<p>
    <b> {{ form.n0.label }} </b>
    <p>{{ form.n0(size=20) }}<p>
-   	  <b>{{ form.n_last.label }}:</b><p>{{ form.n_last(size=20) }}
+   	  <b>{{ form.n_last.label }}:</b> <p>{{ form.n_last(size=20) }} <i> (one or several, example: "1.5" or "1.5, 1.6, 1.7)</i>
     <p> <b>Polarazation:</b><p>
     	{{ form.polarization }}
     <p>
@@ -20,8 +52,9 @@
 <!-- Angle form -->
 
 {% for field in angle_form if field.widget.input_type != 'hidden' %}
-   <b> {{ field.label }}</b>
+   <b> {{ field.label }}:</b> &#8195;
     {{ field }} <p>
+     
 {% endfor %}
 
 <!-- Angle end -->
@@ -33,8 +66,8 @@
 
 <h3>Layer {{loop.index}}</h3> <p>
 <b>{{form_lay.n.label}}:</b> &#8195;{{form_lay.n}} &#8195;
-<b>{{form_lay.k.label}}:</b> &#8195;{{form_lay.k}}
-<b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <p><p>
+<b>{{form_lay.k.label}}:</b> &#8195;{{form_lay.k}} &#8195;
+<b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <i> (one or several)</i> <p><p>
 	
 {% endfor %}
 <!-- Layer end -->
@@ -42,3 +75,7 @@
 <input id="submit" name="submit" type="submit" >
 
 </form>
+
+
+</body>
+</html>

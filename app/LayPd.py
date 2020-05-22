@@ -69,7 +69,8 @@ def Propusk(parametrs,d,teta):
 
 	Reflection=abs(M[1][0]/M[0][0])**2
 	Transmission=(1/M[0][0])
-	output={'R':Reflection, 'T':np.real(Transmission)}
+	Trans=(kz[amountoflayers]/kz[0])*abs(Transmission)**2
+	output={'R':Reflection, 'T':np.real(Trans)}
 
 	#print('_______')
 	#print(np.max(Reflection))
