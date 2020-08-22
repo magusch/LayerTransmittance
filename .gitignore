@@ -1,5 +1,6 @@
 .trans_venv/
 app/static/plot
+.DS_Store
 
 
 # Created by https://www.gitignore.io/api/venv,flask,python
