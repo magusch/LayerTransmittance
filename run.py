@@ -67,7 +67,7 @@ def wavelenght():
 def angle():
     #form_wv = General_form()
     form = General_form()
-    layers_forms=layers()
+    layers_forms=layers(4)
     angle_form=Angle_form()
 
     #layers_forms=Layer_Form()

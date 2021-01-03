@@ -126,14 +126,11 @@ def calc_on_teta(height, **parametrs): #dependecy of angle
 	title=parametrs['title']
 	labl=labels_good(title,parametrs, height, angle)
 
-	output, wv= Propusk(parametrs,height,angle)
+	output, wv = Propusk(parametrs,height,angle)
 	angle_inDegree=angle*360/(2*pi)
-	save_file=np.array([angle_inDegree,output['R']]).transpose()
-	np.savetxt("foo.csv", save_file, delimiter=";")
+
 	plt.plot(angle_inDegree,output[parametrs['y_label']],label=labl) #(angle*360/(2*pi))
 	plt.xlabel('Угол, градусы')
-
-
 
 	output_url.update(output_urls(parametrs, angle_inDegree, output,labl))
 
