@@ -27,7 +27,7 @@ def layers(n=3):
 @app.route('/', methods=['GET', 'POST'])
 def wavelenght():
     form = General_form()
-    layers_forms=layers()
+    layers_forms=layers(4)
     wv_form=wavelength_form()
     if form.validate_on_submit():
         general_data=form.data
@@ -46,7 +46,7 @@ def wavelenght():
         return render_template('answer.html', output_csv=output_csv, mat=wv, IMAGE=image_path)
         #return render_template('answer.html', general=general_data, layers=layer_form_data, additional=wv_data )
 
-    return render_template('submit.html', form=form, layer_form=layers_forms, wv_form=wv_form)   
+    return render_template('wv_index.html', form=form, layer_form=layers_forms, wv_form=wv_form)
     #return render_template( form=form, forms=layers_forms)
     #return 'Hello, World!'
 
