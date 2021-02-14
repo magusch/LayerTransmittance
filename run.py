@@ -23,11 +23,11 @@ def layers(n=3):
     return layer_form
 
 
-
+@app.route('/<int:number_layers>', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
-def wavelenght():
+def wavelenght(number_layers=4):
     form = General_form()
-    layers_forms=layers(4)
+    layers_forms=layers(number_layers)
     wv_form=wavelength_form()
     if form.validate_on_submit():
         general_data=form.data
@@ -62,12 +62,12 @@ def wavelenght():
 #         print('hi')
 #     return render_template('answer.html', q=q)
 
-
+@app.route('/angle/<int:number_layers>', methods=['GET', 'POST'])
 @app.route('/angle', methods=['GET', 'POST'])
-def angle():
+def angle(number_layers=4):
     #form_wv = General_form()
     form = General_form()
-    layers_forms=layers(4)
+    layers_forms=layers(number_layers)
     angle_form=Angle_form()
 
     #layers_forms=Layer_Form()

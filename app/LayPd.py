@@ -6,7 +6,7 @@ import time
 
 pi=np.pi
 j=1j
-ylab={'R':'Коэффициент отражения', 'T':'Коэффициент пропускания'}
+ylab={'R':'Коэффициент отражения', 'T':'Коэффициент пропускания', 'OD':'Оптическая плотность'}
 output_url={}
 
 import matplotlib
@@ -69,12 +69,13 @@ def Propusk(parametrs,d,teta):
 
 	Reflection=abs(M[1][0]/M[0][0])**2
 	Transmission=(1/M[0][0])
-	Trans=(kz[amountoflayers]/kz[0])*abs(Transmission)**2
-	output={'R':Reflection, 'T':np.real(Trans)}
+	Trans=np.real((kz[amountoflayers]/kz[0])*abs(Transmission)**2)
+	if np.min(Trans)!=0: #TODO: исправить если Trans=0 в одном месте
+		OD = np.log10(1/Trans)
+	else:
+		OD = Trans*0
+	output={'R': Reflection, 'T': Trans, 'OD': OD}
 
-	#print('_______')
-	#print(np.max(Reflection))
-	#print('\n')
 
 	return output, wv
 
@@ -142,7 +143,7 @@ def calc_on_teta(height, **parametrs): #dependecy of angle
 
 def output_urls(parametrs, X, output,labl):
 
-	save_file=np.vstack([[parametrs['wit'], 'R', 'T'], np.array([X,output['R'],output['T']]).transpose()])
+	save_file=np.vstack([[parametrs['wit'], 'R', 'T', 'OD'], np.array([X,output['R'],output['T'],output['OD']]).transpose()])
 
 	filename=str(time.time()) +'.csv'
 	csv_path='app/static/plot/'+filename

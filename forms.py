@@ -10,7 +10,7 @@ class General_form(FlaskForm):
     n_last=StringField('n for last layer', default=1)
     #wv=StringField('Wavelength, nm')
     polarization=RadioField("What's polarization", choices=[('S','s-polarization'),('P','p-polarization')], default='S')
-    y_label=RadioField('Reflection or Transmintence', choices=[('R','Reflection'),('T','Transmittance')], default='R')
+    y_label=RadioField('Reflection or Transmintence', choices=[('R','Reflection'),('T','Transmittance'),('OD','Optical density')], default='R')
 
     
 class Layer_Form(FlaskForm):
@@ -22,11 +22,10 @@ class Layer_Form(FlaskForm):
 
 
 class wavelength_form(FlaskForm):
-	angle = StringField('Angle, degrees', default=0) #several
+    angle = StringField('Angle, degrees', default=0) #several
 
 class Angle_form(FlaskForm):
-	wv = FloatField('Wavelength, nm', default=360)
-
-	angle_start = FloatField('Angle (first value)', default=0)
-	angle_finish = FloatField('Angle (last value)', default=90)
-	angle_step = FloatField('Angle step', default=1)
+    wv = FloatField('Wavelength, nm', default=360)
+    angle_start = FloatField('Angle (first value)', default=0)
+    angle_finish = FloatField('Angle (last value)', default=90)
+    angle_step = FloatField('Angle step', default=1)
