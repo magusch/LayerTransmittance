@@ -37,7 +37,7 @@
  <div class='container'> <h1> Wavelenght dependence </h1><p>
 
 <div class='menu'> <a href='/'><h3>Зависимость от длины волны</h3></a><a href='/angle'><h3>Зависимость от угла</h3></a></center></p></div></div>
-  <form method="POST" class='general' action="/">
+  <form method="POST" class='general' action="{{ url_for('plotting') }}">
 
 <!-- General form -->
 {{form.hidden_tag()}}
@@ -65,10 +65,14 @@
 <b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <i> (one or several)</i><p><p>
 	
 {% endfor %}
-<input id="submit" name="submit" type="submit" >
+<input  id="submit" name="submit" type="submit" >
 </form>
 
-<p><b>Другое количество слоёв:</b> <a href="/3">3 слоя</a>, <a href="/4">4 слоя</a>, <a href="/5">5 слоёв</a>, <a href="/6">6 слоёв</a></p>.
+<p><b>Другое количество слоёв:</b>
+    <a href="{{ url_for('wavelength', number_layers=3) }}">3 слоя</a>,
+    <a href="{{ url_for('wavelength', number_layers=4) }}">4 слоя</a>,
+    <a href="{{ url_for('wavelength', number_layers=5) }}">5 слоёв</a>,
+    <a href="{{ url_for('wavelength', number_layers=6) }}">6 слоёв</a></p>.
 
 
 </body>

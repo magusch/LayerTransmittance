@@ -6,6 +6,7 @@
 	{% for name,url in output_csv.items() %}	
 	<b>{{name}}:</b> <a href={{url_for('static', filename='plot/'+url)}} download>Скачать </a>
 	<p>
+        <p></p>
 	{% endfor %}
 
 <!--		<b> {{q}} </b>

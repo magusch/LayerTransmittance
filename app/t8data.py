@@ -4,9 +4,9 @@ from scipy.interpolate import interp1d
 
 from app.LayPd import calculation
 
-
 def datas(material): #load materil's refractive index 
 	return(pd.read_csv('app/static/data/%s.csv' %(material), sep=';'))
+
 
 def interpolate(dts): #interpolate several datas with wvs
 	wv_len=[len(dt['wv']) for dt in dts] #len of datas
@@ -35,6 +35,7 @@ def interpolate(dts): #interpolate several datas with wvs
 	# plt.legend()
 	# plt.show()
 	return wv,n,k
+
 
 def titles(**parametrs): #make title for the plot
 	title={'d':{}, 'n':{}}
@@ -70,58 +71,53 @@ def titles(**parametrs): #make title for the plot
 	return title
 
 
-
-
-
-
-
 def layer_angle(layer_form_data): #Get data for angle dependency. 
-	n,k,d={},{},{}
+	n, k, d = {}, {}, {}
 	for i, layer_data in layer_form_data.items():
-		n[i+1]=layer_data['n']
-		k[i+1]=layer_data['k']
+		n[i+1]=float(layer_data['n'])
+		k[i+1]=float(layer_data['k'])
 		d_list=layer_data['d'].split(',')
 		d[i+1]=[float(di) for di in d_list]
-	return n,k,d
+	return n, k, d
+
 
 def layer_wv(layer_form_data): #Get data for wv dependency.
-	d, material={},{}
+	d, material = {}, {}
 	for i, layer_data in layer_form_data.items():
-		if layer_data['material']=='empty':
+		if layer_data['material'] == 'empty':
 			continue
 		
 		material[i+1]=layer_data['material']
 		d_list=layer_data['d'].split(',')
 		d[i+1]=[float(di) for di in d_list]
-	return d,material
+	return d, material
 
 
 def specific_data_angle(angle_data): # range of angle from angle form
-	beg,end,step=angle_data['angle_start'],angle_data['angle_finish'], angle_data['angle_step']
-	angle=np.arange(beg,end,step)*(2*np.pi)/360
+	beg, end, step = angle_data['angle_start'], angle_data['angle_finish'], angle_data['angle_step']
+	angle = np.arange(beg, end, step)*(2*np.pi)/360
 
-	#parametrs['n'].update(n)
-	#parametrs['k'].update(k)
-	parametrs={'angle':angle, 'wv':angle_data['wv']}
+	parametrs = {'angle': angle, 'wv': angle_data['wv']}
 	return parametrs
 
 
 
 
 def launch(general_data, layer_form_data, add_data, wit):
-	if wit=='angle': #angle dependecy
-		n,k,d=layer_angle(layer_form_data)
-		parametrs=specific_data_angle(add_data) #wv and angle
+	if wit == 'angle': #angle dependecy
+
+		n, k, d = layer_angle(layer_form_data)
+		parametrs = specific_data_angle(add_data) #wv and angle
 		
-	elif wit=='wv': # wavelenght dependecy
-		d,material=layer_wv(layer_form_data)
-		dts=[datas(val) for val in material.values()]
-		wv,n,k=interpolate(dts)
+	elif wit == 'wv': # wavelenght dependecy
+		d, material = layer_wv(layer_form_data)
+		dts = [datas(val) for val in material.values()]
+		wv, n, k=interpolate(dts)
 
 		angle_list=add_data['angle'].split(',')
 		parametrs={'angle':[float(angle)*(2*np.pi)/360 for angle in angle_list], 'wv':wv, 'material':material} #wv and angle
 
-	aol=len(d)+1 #number of layers
+	aol = len(d)+1 #number of layers
 	d[aol]=[0]
 	k[0], k[aol]=0,0
 
@@ -149,4 +145,27 @@ def take_general(general_data, aol):
 	n[aol]=[float(valy) for valy in nlast_list]
 
 	return parametrs, n
+
+
+def divide_data(data):
+	general_data, layer_form_data, depend_data = {}, {}, {}
+	for key, line in data.items():
+		sets = key.split('_')
+		field = '_'.join(sets[1:])
+		if sets[0] == 'general':
+			general_data[field] = line
+		elif sets[0] == 'layers':
+			split_layer = field.split('-')
+			if int(split_layer[1]) in layer_form_data:
+				layer_form_data[int(split_layer[1])].update({split_layer[2]: line})
+			else:
+				layer_form_data[int(split_layer[1])] = {split_layer[2]: line}
+		elif sets[0] == 'wv':
+			wit = 'wv'
+			depend_data[field] = line
+		elif sets[0] == 'ang':
+			wit = 'angle'
+			depend_data[field] = float(line)
+
+	return general_data, layer_form_data, depend_data, wit
 
