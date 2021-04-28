@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transmittance - {{ title }}</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+	<style type="text/css">
+    ul {
+      list-style-type: none;
+
+    }
+     .container {
+      display: flex;
+      margin: auto;
+    }
+
+
+    h1 {
+      text-align: left;
+      margin-left: 40px;
+      margin-right: 20px;
+    }
+
+    .menu {
+      padding-left: 40px;
+      text-align: center;
+
+    }
+		.general {
+			padding-top: 25px;
+			margin-left: auto;
+			padding-left: 40px;
+			padding-right: auto;
+		}
+        input {
+
+            text-align: center;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            autocomplete="off";
+        }
+        .button {
+            background-color: #ee8c46;
+            height: 50px;
+            width: 12%;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            margin-left: 15px;
+            padding: 8px 20px;
+
+        }
+        .button:hover {
+            background-color: #f56c0f;
+            box-shadow: 0 12px 16px 0 rgba(210, 210, 210, 0.24), 0 17px 50px 0 rgba(152, 152, 152, 0.19);
+
+        }
+
+        .form {
+            font-size: 120%;
+            font-family: Helvetica, Verdana, sans-serif;
+            text-align: center;
+            padding: 8px 3px 8px 5px;
+            margin: 5px 10px 5px 3px;
+            margin-top: 20px;
+        }
+	</style>
+</head>
+
+<body>
+    <div class='container'> <h1> {{ title }} </h1><p>
+
+        <div class='menu'>
+            <p><a href='/'><h3>Dependence on wavelength</h3></a>
+            <a href='/angle'><h3>Dependence on angle</h3></a></p>
+        </div>
+    </div>
+
+
+{% block content %}{% endblock %}
+</body>
+</html>

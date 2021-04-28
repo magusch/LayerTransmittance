@@ -1,5 +1,6 @@
-<h1> График </h1>
-<a href='/'><h3>Зависимость от длины волны</h3></a><a href='/angle'><h3>Зависимость от угла</h3></a></center>
+{% extends "header.html" %}
+{% block content %}
+
 	<img src="{{IMAGE}}"><p>
 	<p>
 		Скачать в формате CSV:<p>
@@ -13,4 +14,4 @@
 	<b> {{mat}} </b> -->
 		
 
-	
+	{% endblock %}
