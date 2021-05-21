@@ -84,8 +84,8 @@ def Propusk(parametrs,d,teta):
 def het(d, parametrs, height = {}, o = 1):  #height - dict for calculation; d – dict with all values of height layers, o – what layer
     #het(d = {1:[40,20,0], 2:[30,0], 3:[50,100]}, height = {0:0},  layer = 1)
     for h in d[o]:
-        height[o]  =  int(h)
-        if (h==0) & (o !=  parametrs['amountoflayers']):
+        height[o] = float(h)
+        if (h==0) & (o != parametrs['amountoflayers']):
             height.pop(o)
             parametrs['n'].pop(o)
             parametrs['k'].pop(o)
