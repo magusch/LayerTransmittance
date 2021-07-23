@@ -1,11 +1,14 @@
+import os
+
 import pandas as pd
 import numpy as np
 from scipy.interpolate import interp1d
 
 from app.LayPd import calculation
 
-def datas(material): #load materil's refractive index 
-	return(pd.read_csv('app/static/data/%s.csv' %(material), sep = ';'))
+def datas(material): #load materil's refractive index
+	file = 'app/static/data/%s.csv' %(material)
+	if os.path.isfile(file): return(pd.read_csv(file, sep = ';'))
 
 
 def interpolate(dts): #interpolate several datas with wvs
@@ -99,8 +102,6 @@ def specific_data_angle(angle_data): # range of angle from angle form
 
 	parametrs = {'angle': angle, 'wv': angle_data['wv']}
 	return parametrs
-
-
 
 
 def launch(general_data, layer_form_data, add_data, wit):

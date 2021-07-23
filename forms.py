@@ -31,3 +31,10 @@ class AngleForm(FlaskForm):
     angle_start = FloatField('Angle (first value)', default = 0)
     angle_finish = FloatField('Angle (last value)', default = 90)
     angle_step = FloatField('Angle step', default = 0.1)
+
+class PlasmonForm(FlaskForm): #ДОДЕЛАТ!!!!
+    wv = FloatField('Wavelength, nm', default=360)
+    n0 = FloatField('n', default=1.512)
+    n1 = FloatField('n', default=1.3)
+    k1 = FloatField('k', default=0)
+    n2 = FloatField('n env', default=1.33)

@@ -80,6 +80,102 @@ def Propusk(parametrs,d,teta):
     return output, wv
 
 
+def imag_real(parametrs, d_met):
+    wv = parametrs['wv']
+    n, k = parametrs['n'], parametrs['k']
+    theta = parametrs['theta']
+
+
+    eps_g = n[0]**2
+    eps_met = np.array((n[1] + j * k) ** 2, dtype=np.complex)
+    eps_de1 = np.array(n[2]**2, dtype=np.complex)
+
+    #n_met = np.array((n[1] + j * k), dtype=np.complex)
+    sin = np.array(np.sin(theta), dtype=np.complex)
+    kx = np.sqrt(eps_g)*sin
+    kz=[np.array((2*pi/wv)*np.sqrt(eps_g-kx**2))]
+    kz.append((2 * pi / wv) * np.sqrt(eps_met - kx ** 2))
+    kz.append((2 * pi / wv) * np.sqrt(eps_de1 - kx ** 2))
+
+    # r01_1 = np.sqrt(eps_g - eps_g * np.sin(theta)**2)/eps_g
+    # r01_2 = np.sqrt(eps_met - eps_g*np.sin(theta)**2)/eps_met
+    # r01 = (r01_1 - r01_2)/(r01_1+r01_2)
+    #
+    # r12_1 = np.sqrt(eps_met - eps_g * np.sin(theta)**2)/eps_met
+    # r12_2 = np.sqrt(eps_de1 - eps_g * sin**2)/eps_de1
+    # r12 = (r12_1-r12_2)/(r12_1+r12_2)
+    r = []
+    r.append((eps_met * kz[0] - eps_g * kz[1]) / (eps_met * kz[0] + eps_g * kz[1]))
+    r.append((eps_de1 * kz[1] - eps_met * kz[2]) / (eps_de1 * kz[1] + eps_met * kz[2]))
+    #r[i] = (eps[i] * kz[io] - eps[io] * kz[i]) / (eps[i] * kz[io] + eps[io] * kz[i])
+
+    sin_theta = np.sqrt((eps_met*eps_de1)/(eps_met+eps_de1)).real/n[0]
+
+    d_min = 100
+    theta_min = 0
+
+    min_z = 0.02
+
+    for d in d_met:
+        #r012_chisl = r01 + r12 * np.exp(j*2*n_met*kz[1]*d)
+        r012_chisl = r[0] + r[1] * np.exp(j * 2 * kz[1] * d)
+        x = r012_chisl.real
+        y = r012_chisl.imag
+        print(d)
+        x_zero = np.where(abs(x)-min_z/2 < 0)
+        y_zero = np.where(abs(y)-min_z/2 < 0)
+        zero = [zero for zero in x_zero[0] if zero in y_zero[0]]
+        o = 0
+        for z in zero:
+            if abs((abs(x[z])-min_z/2)+(abs(y[z])-min_z/2))>min_z: continue
+            min_z = abs((abs(x[z])-min_z/2)+(abs(y[z])-min_z/2))
+            print(f"min_z: {min_z}")
+            #print(parametrs['theta'][z])
+            d_min=d
+            theta_min = parametrs['theta'][z]
+            if o == 0: plt.text(x[z]+0.03*(max(x)), y[z]+0.1*(max(y)), f"{round(d,1)} нм – {round(parametrs['theta'][z] / (2 * 3.1415 / 360), 2)}°")
+            o=1
+        plt.plot(x, y, label=f'{round(d,2)}')
+        # if np.where(y == 0)[0]:
+        #     print("!!!!!")
+        #     print(np.where(x == 0)[0])
+
+    #plt.plot(x, y, label=f'{d}')
+    line_x = np.arange(-0.1*(max(x)-min(x)), 0.1*(max(x)-min(x)), 0.03)
+    line_zero_x = 0 * np.arange(len(line_x))
+    line_y = np.arange(-0.1 * (max(y) - min(y)), 0.1 * (max(y) - min(y)), 0.03)
+    line_zero_y = 0 * np.arange(len(line_y))
+    plt.plot(line_zero_x, line_x, 'k-.')
+    plt.plot(line_y, line_zero_y, 'k-.')
+    plt.title(f"n_Аналит: {n[-1]}")
+    plt.text(x[0], y[0], f"{round(parametrs['theta'][0]/(2*3.1415/360),2)}°")
+    plt.text(x[-1], y[-1], f"{round(parametrs['theta'][-1]/(2*3.1415/360),2)}°")
+
+
+
+    plt.xlabel('real')
+    plt.ylabel('imag')
+    plt.legend()
+    plt.show()
+    return d_min, theta_min
+
+
+
+# import numpy as np
+#
+# parametrs = {'wv': 632.8,
+# 	'n': [1.512, #Призма
+# 			0.18508,    # Метал
+# 			1.0], # Аналит
+# 	'k': 3.4233, #Метал
+# 	'theta': np.arange(0,1.5, 0.0001)
+# }
+# d_met = range(35,50,5)
+#
+# from app.LayPd import imag_real
+#
+# x,y=imag_real(parametrs, d_met)
+
 
 def het(d, parametrs, height = {}, o = 1):  #height - dict for calculation; d – dict with all values of height layers, o – what layer
     #het(d = {1:[40,20,0], 2:[30,0], 3:[50,100]}, height = {0:0},  layer = 1)

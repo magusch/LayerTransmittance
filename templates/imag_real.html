@@ -1,0 +1,17 @@
+{% extends "header.html" %}
+{% block content %}
+
+
+<a href=""
+
+
+
+
+<p><b>Другое количество слоёв:</b>
+    <a href="{{ url_for('wavelength', number_layers=3) }}">3 слоя</a>,
+    <a href="{{ url_for('wavelength', number_layers=4) }}">4 слоя</a>,
+    <a href="{{ url_for('wavelength', number_layers=5) }}">5 слоёв</a>,
+    <a href="{{ url_for('wavelength', number_layers=6) }}">6 слоёв</a></p>.
+
+
+{% endblock %}

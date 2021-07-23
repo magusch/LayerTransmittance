@@ -1,10 +1,10 @@
-import os
+import os, json
 from flask import Flask, render_template, request, url_for, redirect, flash
 from werkzeug.utils import secure_filename
 
 from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm
 
-from app.t8data import launch, divide_data
+from app.t8data import launch, divide_data, datas
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -52,6 +52,33 @@ def plotting():
     mat, output_csv, image_path = launch(general_data, layer_form_data, depend_data, wit=wit)
     image_path = url_for('static', filename='plot/' + image_path)
     return render_template('answer.html', output_csv=output_csv, mat=mat, IMAGE=image_path, title = 'The Graph')
+
+
+@app.route('/imag_real', methods=['POST'])
+def imag_real():
+
+    return render_template('imag_real.html')
+
+
+@app.route('/ajax_imag_real')
+def ajax_imag_real():
+    query = request.args.get('query').upper()
+    return json.dumps('ANSWER!!!!')
+
+@app.route('/refraction_for_material/<string:material>')
+def ajax_refractive_for_material(material):
+    wv = request.args.get('wv')
+    if wv==None:
+        return 'None. Need to type wavelength'
+    df = datas(material)
+
+    if df is not None:
+        df['wv_mean'] = abs(df['wv']-float(wv))
+        index = df.where(df['wv_mean']==min(df['wv_mean'])).first_valid_index()
+        answer = {'wv': float(df['wv'][index]), 'n': float(df['n'][index]), 'k': float(df['k'][index])}
+        return json.dumps(answer)
+    else:
+        return 'None material'
 
 
 if __name__ == '__main__':
