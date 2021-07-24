@@ -81,8 +81,10 @@ def Propusk(parametrs,d,teta):
 
 
 def imag_real(parametrs, d_met):
-    wv = parametrs['wv']
-    n, k = parametrs['n'], parametrs['k']
+    wv = float(parametrs['wv'])
+    n = [parametrs['n0'], parametrs['n1'], parametrs['n2']]
+    n = [float(i) for i in n]
+    k = float(parametrs['k1'])
     theta = parametrs['theta']
 
 
@@ -97,13 +99,7 @@ def imag_real(parametrs, d_met):
     kz.append((2 * pi / wv) * np.sqrt(eps_met - kx ** 2))
     kz.append((2 * pi / wv) * np.sqrt(eps_de1 - kx ** 2))
 
-    # r01_1 = np.sqrt(eps_g - eps_g * np.sin(theta)**2)/eps_g
-    # r01_2 = np.sqrt(eps_met - eps_g*np.sin(theta)**2)/eps_met
-    # r01 = (r01_1 - r01_2)/(r01_1+r01_2)
-    #
-    # r12_1 = np.sqrt(eps_met - eps_g * np.sin(theta)**2)/eps_met
-    # r12_2 = np.sqrt(eps_de1 - eps_g * sin**2)/eps_de1
-    # r12 = (r12_1-r12_2)/(r12_1+r12_2)
+
     r = []
     r.append((eps_met * kz[0] - eps_g * kz[1]) / (eps_met * kz[0] + eps_g * kz[1]))
     r.append((eps_de1 * kz[1] - eps_met * kz[2]) / (eps_de1 * kz[1] + eps_met * kz[2]))
@@ -111,55 +107,97 @@ def imag_real(parametrs, d_met):
 
     sin_theta = np.sqrt((eps_met*eps_de1)/(eps_met+eps_de1)).real/n[0]
 
-    d_min = 100
+    d_min = 0
     theta_min = 0
 
-    min_z = 0.02
+    #min_z = 0.02
+    min_z = abs(d_met[1]-d_met[0])/2
 
     for d in d_met:
-        #r012_chisl = r01 + r12 * np.exp(j*2*n_met*kz[1]*d)
         r012_chisl = r[0] + r[1] * np.exp(j * 2 * kz[1] * d)
         x = r012_chisl.real
         y = r012_chisl.imag
-        print(d)
-        x_zero = np.where(abs(x)-min_z/2 < 0)
-        y_zero = np.where(abs(y)-min_z/2 < 0)
-        zero = [zero for zero in x_zero[0] if zero in y_zero[0]]
-        o = 0
-        for z in zero:
-            if abs((abs(x[z])-min_z/2)+(abs(y[z])-min_z/2))>min_z: continue
-            min_z = abs((abs(x[z])-min_z/2)+(abs(y[z])-min_z/2))
-            print(f"min_z: {min_z}")
-            #print(parametrs['theta'][z])
-            d_min=d
-            theta_min = parametrs['theta'][z]
-            if o == 0: plt.text(x[z]+0.03*(max(x)), y[z]+0.1*(max(y)), f"{round(d,1)} нм – {round(parametrs['theta'][z] / (2 * 3.1415 / 360), 2)}°")
-            o=1
-        plt.plot(x, y, label=f'{round(d,2)}')
+
+        zero_array = np.sqrt(x**2+y**2)
+        min_z_index = list(zero_array).index(zero_array.min())
+        if zero_array[min_z_index]<min_z:
+            min_z = zero_array[min_z_index]
+            d_min = d
+            theta_min = parametrs['theta'][min_z_index]
+
+        # x_zero = np.where(abs(x)-min_z/2 < 0)
+        # y_zero = np.where(abs(y)-min_z/2 < 0)
+        # zero = [zero for zero in x_zero[0] if zero in y_zero[0]]
+        # o = 0
+        # for z in zero:
+        #     if abs((abs(x[z])-min_z/2)+(abs(y[z])-min_z/2))>1.5*min_z: continue
+        #     min_z = abs((abs(x[z])-min_z/2)+(abs(y[z])-min_z/2))
+        #     print(f"min_z: {min_z}")
+        #     #print(parametrs['theta'][z])
+        #     d_min=d
+        #     theta_min = parametrs['theta'][z]
+        #     if o == 0: plt.text(x[z]+0.03*(max(x)), y[z]+0.1*(max(y)), f"{round(d,1)} нм – {round(parametrs['theta'][z] / (2 * 3.1415 / 360), 2)}°")
+        #     o=1
+        #plt.plot(x, y, label=f'{round(d,2)}')
         # if np.where(y == 0)[0]:
         #     print("!!!!!")
         #     print(np.where(x == 0)[0])
 
     #plt.plot(x, y, label=f'{d}')
-    line_x = np.arange(-0.1*(max(x)-min(x)), 0.1*(max(x)-min(x)), 0.03)
-    line_zero_x = 0 * np.arange(len(line_x))
-    line_y = np.arange(-0.1 * (max(y) - min(y)), 0.1 * (max(y) - min(y)), 0.03)
-    line_zero_y = 0 * np.arange(len(line_y))
-    plt.plot(line_zero_x, line_x, 'k-.')
-    plt.plot(line_y, line_zero_y, 'k-.')
-    plt.title(f"n_Аналит: {n[-1]}")
-    plt.text(x[0], y[0], f"{round(parametrs['theta'][0]/(2*3.1415/360),2)}°")
-    plt.text(x[-1], y[-1], f"{round(parametrs['theta'][-1]/(2*3.1415/360),2)}°")
+    # line_x = np.arange(-0.1*(max(x)-min(x)), 0.1*(max(x)-min(x)), 0.03)
+    # line_zero_x = 0 * np.arange(len(line_x))
+    # line_y = np.arange(-0.1 * (max(y) - min(y)), 0.1 * (max(y) - min(y)), 0.03)
+    # line_zero_y = 0 * np.arange(len(line_y))
+    # plt.plot(line_zero_x, line_x, 'k-.')
+    # plt.plot(line_y, line_zero_y, 'k-.')
+    # plt.title(f"n_Аналит: {n[-1]}")
+    # plt.text(x[0], y[0], f"{round(parametrs['theta'][0]/(2*3.1415/360),2)}°")
+    # plt.text(x[-1], y[-1], f"{round(parametrs['theta'][-1]/(2*3.1415/360),2)}°")
 
+    # plt.xlabel('real')
+    # plt.ylabel('imag')
+    # plt.legend()
+    # plt.show()
 
-
-    plt.xlabel('real')
-    plt.ylabel('imag')
-    plt.legend()
-    plt.show()
     return d_min, theta_min
 
 
+# parametrs = {'wv': 403.3,
+# 	'n': [1.512, #Призма
+# 			1.5404,    # Метал
+# 			1.33], # Аналит
+# 	'k': 1.9249, #Метал
+# }
+def find_d_met(parameters):
+    parameters['theta'] = np.arange(0, 1.57, 0.00001)
+
+    d_range_dict = {'d_range_min': 5, 'd_range_max': 100, 'd_range_step': 5}
+
+    while d_range_dict['d_range_step'] > 0.001:
+        d_range = np.arange(d_range_dict['d_range_min'], d_range_dict['d_range_max'], d_range_dict['d_range_step'])
+        d_met_new, theta_min_new = imag_real(parameters, d_range)
+
+        if d_met_new == 0: break
+        d_met, theta_min = d_met_new, theta_min_new
+
+        if d_met != 0:
+            d_met_i = list(d_range).index(d_met)
+        else:
+            break
+
+        if d_met_i != 0:
+            d_range_dict['d_range_min'] = d_range[d_met_i - 1]
+        else:
+            d_range_dict['d_range_min'] = d_range[d_met_i] - d_range_dict['d_range_step'] / 10
+
+        if d_met_i != list(d_range).index(d_range[-1]):
+            d_range_dict['d_range_max'] = d_range[d_met_i + 1]
+        else:
+            d_range_dict['d_range_max'] = d_range[d_met_i] + d_range_dict['d_range_step'] / 10
+
+        d_range_dict['d_range_step'] = (d_range_dict['d_range_max'] - d_range_dict['d_range_min']) / 10
+
+    return (d_met, theta_min)
 
 # import numpy as np
 #

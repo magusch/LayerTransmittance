@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm
 
 from app.t8data import launch, divide_data, datas
+from app.LayPd import find_d_met
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -45,6 +46,10 @@ def angle(number_layers=4):
                            title='Angle dependence')
 
 
+@app.route('/plasmon', methods=['GET', 'POST'])
+def plasmon():
+    return render_template('plasmon.html', title='Plasmon')
+
 @app.route('/plotting', methods=['POST'])
 def plotting():
     data = request.form.to_dict()
@@ -56,7 +61,6 @@ def plotting():
 
 @app.route('/imag_real', methods=['POST'])
 def imag_real():
-
     return render_template('imag_real.html')
 
 
@@ -79,6 +83,19 @@ def ajax_refractive_for_material(material):
         return json.dumps(answer)
     else:
         return 'None material'
+
+
+@app.route('/get_plasmon')
+def get_plasmon():
+    parameters = {
+        'wv' : request.args.get('wv'),
+        'n0' : request.args.get('n0'),
+        'n1': request.args.get('n1'), 'k1': request.args.get('k1'),
+        'n2': request.args.get('n2')
+    }
+    d_met, theta_min = find_d_met(parameters)
+    response = {'d_met': round(d_met,3), 'theta':round(theta_min,3)}
+    return json.dumps(response)
 
 
 if __name__ == '__main__':
