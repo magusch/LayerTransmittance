@@ -13,7 +13,7 @@ import matplotlib
 matplotlib.use('agg')
 
 
-def Propusk(parametrs,d,teta):
+def layer_transmittance(parametrs,d,teta):
     wv = parametrs['wv']
     n,k = parametrs['n'],parametrs['k']
     amountoflayers = parametrs['amountoflayers']
@@ -85,12 +85,13 @@ def imag_real(parametrs, d_met):
     n = [parametrs['n0'], parametrs['n1'], parametrs['n2']]
     n = [float(i) for i in n]
     k = float(parametrs['k1'])
+    k2 = float(0.00085466)
     theta = parametrs['theta']
 
 
     eps_g = n[0]**2
     eps_met = np.array((n[1] + j * k) ** 2, dtype=np.complex)
-    eps_de1 = np.array(n[2]**2, dtype=np.complex)
+    eps_de1 = np.array((n[2]+j*k2)**2, dtype=np.complex)
 
     #n_met = np.array((n[1] + j * k), dtype=np.complex)
     sin = np.array(np.sin(theta), dtype=np.complex)
@@ -238,7 +239,7 @@ def calc_on_wv(height, **parametrs): #dependecy of wv with loop for list of angl
     angle = parametrs['angle']
     title = parametrs['title']
     for teta in angle:
-        output, wv =  Propusk(parametrs,height,teta)
+        output, wv = layer_transmittance(parametrs,height,teta)
         labl = labels_good(title,parametrs, height, teta)
 
         # save_file = np.vstack([['wv', 'R', 'T'], np.array([wv,output['R'],output['T']]).transpose()])
@@ -261,15 +262,33 @@ def calc_on_teta(height, **parametrs): #dependecy of angle
     title = parametrs['title']
     labl = labels_good(title, parametrs, height, angle)
 
-    output, wv = Propusk(parametrs,height,angle)
+    output, wv = layer_transmittance(parametrs,height,angle)
     angle_inDegree = angle*360/(2*pi)
 
     plt.plot(angle_inDegree, output[parametrs['y_label']], label=labl) #(angle*360/(2*pi))
+
     plt.xlabel('Угол, градусы')
+
+    #find_width(angle_inDegree, output[parametrs['y_label']], height[2])
 
     output_url.update(output_urls(parametrs, angle_inDegree, output,labl))
 
     return wv, output_url
+
+def find_width(x,y, d):
+    height = max(y) - min(y)
+
+    y_half = np.where(abs(y-height/2) < height*0.0001)
+    if y_half[0] is False: return
+    #print(y_half)
+    length = len(y_half[0])
+    #print(d)
+    x1 = y_half[0][int(length/4)]
+    x2 = y_half[0][int(length*3/4)]
+    width = x[x2]-x[x1]
+    print(f'd2: {d}, width: {width}, height: {height}, ratio: {height/width}')
+
+
 
 
 def output_urls(parametrs, X, output,labl):
@@ -280,7 +299,7 @@ def output_urls(parametrs, X, output,labl):
 
     np.savetxt(csv_path, save_file, delimiter = ";", fmt = '%s')
     if labl == '':
-        labl = title2str(parametrs['title'])
+        labl = title_to_str(parametrs['title'])
     output_url[labl]=filename
     return output_url
 
@@ -303,7 +322,7 @@ def labels_good(title,parametrs, height, teta): #angle, height, n0, n_last
 
 
 
-def title2str(title): #dict title to string
+def title_to_str(title): #dict title to string
     str_title = ''
     try:
         str_title += str(title['material'])[1:-1]+'; '
@@ -335,7 +354,7 @@ def calculation(parametrs):
         wv,output = het(d,parametrs)
 
     plt.ylabel(ylab[parametrs['y_label']])
-    str_title = title2str(parametrs['title'])
+    str_title = title_to_str(parametrs['title'])
     plt.title(str_title)
     plt.legend( ) #title = parametrs['title']
     filename_plot = str(int(time.time())) +'.png'
