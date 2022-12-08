@@ -85,7 +85,7 @@ def imag_real(parametrs, d_met):
     n = [parametrs['n0'], parametrs['n1'], parametrs['n2']]
     n = [float(i) for i in n]
     k = float(parametrs['k1'])
-    k2 = float(0.00085466)
+    k2 = 0
     theta = parametrs['theta']
 
 
@@ -144,7 +144,7 @@ def imag_real(parametrs, d_met):
         #     print("!!!!!")
         #     print(np.where(x == 0)[0])
 
-    #plt.plot(x, y, label=f'{d}')
+    plt.plot(x, y, label=f'{d}')
     # line_x = np.arange(-0.1*(max(x)-min(x)), 0.1*(max(x)-min(x)), 0.03)
     # line_zero_x = 0 * np.arange(len(line_x))
     # line_y = np.arange(-0.1 * (max(y) - min(y)), 0.1 * (max(y) - min(y)), 0.03)
@@ -158,8 +158,14 @@ def imag_real(parametrs, d_met):
     # plt.xlabel('real')
     # plt.ylabel('imag')
     # plt.legend()
-    # plt.show()
-
+    # plt.show()ъ
+    csv_filename = f"csv/2_{d_min}_{theta_min}.csv"
+    filename = (save_file(x, y, theta, csv_filename))
+    plt.savefig(filename+'.jpg')
+    #plt.savefig('ffff' + '.jpg')
+    csv_path = 'csv/filename'
+    #save_file()
+    #print(save_file(x, y))
     return d_min, theta_min
 
 
@@ -197,7 +203,7 @@ def find_d_met(parameters):
             d_range_dict['d_range_max'] = d_range[d_met_i] + d_range_dict['d_range_step'] / 10
 
         d_range_dict['d_range_step'] = (d_range_dict['d_range_max'] - d_range_dict['d_range_min']) / 10
-
+    print(d_range_dict)
     return (d_met, theta_min)
 
 # import numpy as np
@@ -282,7 +288,7 @@ def find_width(x,y, d):
     if y_half[0] is False: return
     #print(y_half)
     length = len(y_half[0])
-    #print(d)
+    print(d)
     x1 = y_half[0][int(length/4)]
     x2 = y_half[0][int(length*3/4)]
     width = x[x2]-x[x1]
@@ -303,6 +309,17 @@ def output_urls(parametrs, X, output,labl):
     output_url[labl]=filename
     return output_url
 
+def save_file(X,Y, Z=[], filename=str(time.time()) +'_saved.csv'):
+    if Z==[]:
+        save_file = np.vstack(
+            [['X', 'Y'], np.array([X,Y]).transpose()])
+    else:
+        save_file = np.vstack(
+            [['X', 'Y', 'Z'], np.array([X, Y, Z]).transpose()])
+
+    csv_path = 'app/static/plot/' + filename
+    np.savetxt(csv_path, save_file, delimiter=";", fmt='%s')
+    return csv_path
 
 def labels_good(title,parametrs, height, teta): #angle, height, n0, n_last
     labels = {} #str??
