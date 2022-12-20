@@ -7,8 +7,9 @@ RUN apk add --no-cache --update \
     gcc gfortran musl-dev \
     musl-dev linux-headers g++
 RUN apk add --update --no-cache py3-numpy
-RUN pip install pandas
 RUN apk add py3-scipy
+RUN pip install numpy==1.23.5
+RUN pip install pandas==1.5.2
 RUN pip install scipy==1.8.0
 RUN pip install matplotlib==3.6.2
 ENV PYTHONDONTWRITEBYTECODE=1
