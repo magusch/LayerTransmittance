@@ -8,7 +8,7 @@ RUN apk add --no-cache --update \
     musl-dev linux-headers g++
 RUN apk add --update --no-cache py3-numpy
 RUN apk add py3-scipy
-RUN pip3 install --extra-index-url https://alpine-wheels.github.io/index==1.23.5
+RUN pip3 install --extra-index-url https://alpine-wheels.github.io/index numpy==1.23.5
 RUN pip3 install pandas==1.5.2
 RUN pip3 install scipy==1.8.0
 RUN pip3 install matplotlib==3.6.2
