@@ -7,10 +7,9 @@ RUN apk add --no-cache --update \
     gcc gfortran musl-dev \
     musl-dev linux-headers g++
 RUN apk add --update --no-cache py3-numpy
-RUN apk add py3-scipy
+RUN apk add --update --no-cache py3-scipy
 RUN pip3 install --extra-index-url https://alpine-wheels.github.io/index numpy==1.23.5
 RUN pip3 install --extra-index-url https://alpine-wheels.github.io/index pandas==1.5.2
-RUN pip3 install --extra-index-url https://alpine-wheels.github.io/index scipy
 RUN pip3 install matplotlib==3.6.2
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
