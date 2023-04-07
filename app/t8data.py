@@ -4,7 +4,8 @@ import pandas as pd
 import numpy as np
 from scipy.interpolate import interp1d
 
-from app.LayPd import calculation
+#from app.LayPd import calculation
+from app.saving_plot import TransmittancePlotter
 
 def datas(material): #load materil's refractive index
 	file = 'app/static/data/%s.csv' %(material)
@@ -128,8 +129,8 @@ def launch(general_data, layer_form_data, add_data, wit):
 	parametrs.update(parametrs2) 
 	parametrs.update({'n':n, 'k':k, 'd':d, 'amountoflayers':aol, 'wit':wit})
 	parametrs['title'] = titles(**parametrs) #from parametrs dict make title for plot
-
-	wv,output,path = calculation(parametrs) #run calculation
+	plotter = TransmittancePlotter(**parametrs)
+	wv,output,path = plotter.run()
 	return(wv,output,path)	
 
 
