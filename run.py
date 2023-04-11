@@ -5,15 +5,14 @@ from werkzeug.utils import secure_filename
 from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm
 
 from app.t8data import launch, divide_data, datas
-from app.LayPd import find_d_met
+from app.searching_plasmon import SearchingPlasmonPlace
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-app = Flask(__name__, static_folder='app/static/')
+app = Flask(__name__, static_folder='/layer_transmittance/static/')
 
 app.config.update(
-    UPLOADED_PATH=os.path.join(basedir, 'app/static/plot'),
-    static_folder='app/static/',
+    UPLOADED_PATH='/layer_transmittance/', #os.path.join(basedir, 'app/static/plot'),
     WTF_CSRF_ENABLED= False )
 
 
@@ -93,7 +92,8 @@ def get_plasmon():
         'n1': request.args.get('n1'), 'k1': request.args.get('k1'),
         'n2': request.args.get('n2')
     }
-    d_met, theta_min = find_d_met(parameters)
+    plasmon_class = SearchingPlasmonPlace(parameters)
+    d_met, theta_min = plasmon_class.find_d_met()
     response = {'d_met': round(d_met,3), 'theta':round(theta_min,3)}
     return json.dumps(response)
 
