@@ -4,8 +4,9 @@ from werkzeug.utils import secure_filename
 
 from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm
 
-from app.t8data import launch, divide_data, datas
+#from app.t8data import launch, divide_data, datas
 from app.searching_plasmon import SearchingPlasmonPlace
+from app.prepare_data import PrepareData
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -52,8 +53,9 @@ def plasmon():
 @app.route('/plotting', methods=['POST'])
 def plotting():
     data = request.form.to_dict()
-    general_data, layer_form_data, depend_data, wit = divide_data(data)
-    mat, output_csv, image_path = launch(general_data, layer_form_data, depend_data, wit=wit)
+    data_class = PrepareData()
+    general_data, layer_form_data, depend_data, wit = data_class.divide_data(data)
+    mat, output_csv, image_path = data_class.launch(general_data, layer_form_data, depend_data, wit=wit)
     image_path = url_for('static', filename='plot/' + image_path)
     return render_template('answer.html', output_csv=output_csv, mat=mat, IMAGE=image_path, title = 'The Graph')
 
@@ -73,7 +75,7 @@ def ajax_refractive_for_material(material):
     wv = request.args.get('wv')
     if wv==None:
         return 'None. Need to type wavelength'
-    df = datas(material)
+    df = PrepareData().datas(material)
 
     if df is not None:
         df['wv_mean'] = abs(df['wv']-float(wv))
