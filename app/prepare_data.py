@@ -126,7 +126,6 @@ class PrepareData:
         aol = parameters['amountoflayers']
         d = parameters['d']
         for index_d, value in d.items():
-            # print(index_d,len(value),aol, value)
             if (len(value) == 1) & (index_d not in (0, aol)):
                 title['d'][(index_d)] = value[0]
             elif value[0] == 0:
@@ -174,4 +173,33 @@ class PrepareData:
                 depend_data[field] = float(line)
 
         return general_data, layer_form_data, depend_data, wit
+
+
+
+    def get_parameters(self, general_data, layer_form_data, add_data, wit):
+        if wit == 'angle':  # angle dependecy
+
+            n, k, d = self.layer_angle(layer_form_data)
+            parameters = self.specific_data_angle(add_data)  # wv and angle
+
+        elif wit == 'wv':  # wavelenght dependecy
+            d, material = self.layer_wv(layer_form_data)
+            dts = [self.refractive_index_for_material(val) for val in material.values()]
+            wv, n, k = self.interpolate(dts)
+
+            angle_list = add_data['angle'].split(',')
+            parameters = {'angle': [float(angle) * (2 * np.pi) / 360 for angle in angle_list], 'wv': wv,
+                         'material': material}  # wv and angle
+
+        aol = len(d) + 1  # number of layers
+        d[aol] = [0]
+        k[0], k[aol] = 0, 0
+
+        parameters2, n_gen = self.take_general(general_data, aol)  # y_label and polarization
+        n.update(n_gen)  # n0 and n_last
+
+        parameters.update(parameters2)
+        parameters.update({'n': n, 'k': k, 'd': d, 'amountoflayers': aol, 'wit': wit})
+        parameters['title'] = self.titles(**parameters)  # from parametrs dict make title for plot
+        return parameters
 

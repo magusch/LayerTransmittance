@@ -27,10 +27,13 @@
 
 <h3>Layer {{loop.index}}</h3> <p>
 <b>{{form_lay.material.label}}:</b> &#8195;{{form_lay.material}}  &#8195;
-<b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <i> (one or several)</i><p><p>
+<b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <i> (one or several)</i><p>
 
 {% endfor %}
-<input  id="submit" name="submit" type="submit" class="button">
+
+  <button type="submit" class="button" formaction="{{ url_for('plotting') }}">Send (old version)</button>
+  <button type="submit" class="button" formaction="{{ url_for('plot_new') }}">Send 2(New)</button>
+
 </form>
 
 <p><b>Другое количество слоёв:</b>

@@ -2,13 +2,13 @@ import numpy as np
 
 class LayerTransmittanceCalculator:
 
-    def __init__(self, parameters):
+    def __init__(self, parameters, height, ri):
         self.parameters = parameters
         self.wv = parameters['wv']
-        self.n = parameters['n']
-        self.k = parameters['k']
+        self.n = ri['n']
+        self.k = ri['k']
         self.theta = parameters['theta']
-        self.d = parameters['d']
+        self.d = height # parameters['d']
         self.amountoflayers = parameters['amountoflayers']
         self.M = np.array([[1, 0], [0, 1]])
 
@@ -37,7 +37,7 @@ class LayerTransmittanceCalculator:
     def _calculate_matrices(self):
         r,t,be = {},{},{}
 
-        io = 0 #zero layer
+        io = 0 # zero layer
         matr_delta = {
             io: np.array([[1,0],[0,1]])
         }
@@ -61,9 +61,9 @@ class LayerTransmittanceCalculator:
                 be[i] = np.inf
 
             if self.parameters['polarization']=='S': # S-polarization
-                t[i] = 2*kz[io]/(kz[io]+kz[i]) #S-поляризация
+                t[i] = 2*kz[io]/(kz[io]+kz[i])
                 r[i] = (kz[io]-kz[i])/(kz[io]+kz[i])
-            else: 							  # P-polarization
+            else: # P-polarization
                 t[i] = 2*kz[io]*np.sqrt(eps[io]*eps[i])/(eps[i]*kz[io]+eps[io]*kz[i])
                 r[i] = (eps[i]*kz[io]-eps[io]*kz[i])/(eps[i]*kz[io]+eps[io]*kz[i])
 
@@ -92,5 +92,4 @@ class LayerTransmittanceCalculator:
         else:
             OD = Trans * 0
         output = {'R': Reflection, 'T': Trans, 'OD': OD}
-        #print(output)
         return output, self.wv
