@@ -46,12 +46,10 @@ class TransmittancePlotterNew:
 
     def calc_on_wv(self, height, ri):
         output, wv = self.plot_transmittance_vs_wavelength(height, ri)
-        self.output_urls(wv, output[self.layer_params.angle[0]])
         return wv, output
 
     def calc_on_teta(self, height, ri):
         angle_inDegree, output = self.plot_transmittance_vs_angle(height, ri)
-        self.output_urls(angle_inDegree, output)
         return angle_inDegree, output
 
     def plot_transmittance_vs_wavelength(self, height, ri):
@@ -67,6 +65,7 @@ class TransmittancePlotterNew:
                 x=wv, y=output[theta][self.layer_params.y_label],
                 name=self.label, line_shape='linear'
             ))
+            self.output_urls(wv, output[theta])
         self.fig.update_layout(xaxis_title='Wavelength, nm')
         return output, wv
 
@@ -85,6 +84,7 @@ class TransmittancePlotterNew:
             name=self.label,line_shape='linear'
         ))
         self.fig.update_layout(xaxis_title='Angle, degree')
+        self.output_urls(angle_inDegree, output)
         return angle_inDegree, output
 
     def output_urls(self, X, output):
