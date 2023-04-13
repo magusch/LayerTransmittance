@@ -26,7 +26,6 @@ class TransmittancePlotter:
     # height - dict for calculation; d – dict with all values of height layers, o – what layer
     # het(d = {1:[40,20,0], 2:[30,0], 3:[50,100]}, height = {0:0},  layer = 1)
     def het(self, d, ri, height={}, o=1):
-
         for h in d[o]:
             height[o] = float(h)
             if (h == 0) & (o != self.layer_params.amountoflayers):
@@ -34,7 +33,7 @@ class TransmittancePlotter:
                 ri['n'].pop(o)
                 ri['k'].pop(o)
             try:
-                wv, output = self.het(d, height, o + 1)
+                wv, output = self.het(d, ri, height, o + 1)
             except:
                 self.layer_params.height = height
                 if self.layer_params.wit == 'angle':
@@ -73,8 +72,6 @@ class TransmittancePlotter:
         output, wv = layer_transmittance.calculate_output()
 
         angle_inDegree = angle * 360 / (2 * np.pi)
-        #for theta in angle:
-        #self.layer_params.theta = theta
         self.label = self.labels_good()
         plt.plot(angle_inDegree, output[self.layer_params.y_label], label=self.label)
         plt.xlabel('Угол, градусы')
@@ -130,8 +127,7 @@ class TransmittancePlotter:
         return labels
 
     def run(self):
-        global output_url
-        output_url = {}
+
         aol = self.layer_params.amountoflayers
         n_last = self.layer_params.n[aol]
         d = self.layer_params.d
@@ -150,6 +146,5 @@ class TransmittancePlotter:
         filename_plot = str(int(time.time())) + '.png'
         image_path = 'app/static/plot/' + filename_plot
         plt.savefig(image_path)
-
         plt.clf()  # delete plot
-        return (wv, output, filename_plot)
+        return wv, output, filename_plot
