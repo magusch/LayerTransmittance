@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+import matplotlib
+matplotlib.use('agg')
+
 import time
 
 from app.layer_transmittance_calculator import LayerTransmittanceCalculator

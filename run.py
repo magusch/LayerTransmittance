@@ -1,10 +1,8 @@
 import os, json
 from flask import Flask, render_template, request, url_for, redirect, flash
-from werkzeug.utils import secure_filename
 
 from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm
 
-#from app.t8data import launch, divide_data, datas
 from app.searching_plasmon import SearchingPlasmonPlace
 from app.prepare_data import PrepareData
 
@@ -50,6 +48,7 @@ def angle(number_layers=4):
 def plasmon():
     return render_template('plasmon.html', title='Plasmon')
 
+
 @app.route('/plotting', methods=['POST'])
 def plotting():
     data = request.form.to_dict()
@@ -65,25 +64,16 @@ def imag_real():
     return render_template('imag_real.html')
 
 
-@app.route('/ajax_imag_real')
-def ajax_imag_real():
-    query = request.args.get('query').upper()
-    return json.dumps('ANSWER!!!!')
-
 @app.route('/refraction_for_material/<string:material>')
 def ajax_refractive_for_material(material):
     wv = request.args.get('wv')
-    if wv==None:
-        return 'None. Need to type wavelength'
-    df = PrepareData().datas(material)
-
-    if df is not None:
-        df['wv_mean'] = abs(df['wv']-float(wv))
-        index = df.where(df['wv_mean']==min(df['wv_mean'])).first_valid_index()
-        answer = {'wv': float(df['wv'][index]), 'n': float(df['n'][index]), 'k': float(df['k'][index])}
+    if wv == None:
+        return json.dumps({'error':"None. Need to type wavelength. Example: 'refraction_for_material/ag/?wv=403'"})
+    answer = PrepareData().refractive_index_for_wavelength(material, wv)
+    if answer is not None:
         return json.dumps(answer)
     else:
-        return 'None material'
+        return json.dumps({'error':'None material.'})
 
 
 @app.route('/get_plasmon')
@@ -101,4 +91,4 @@ def get_plasmon():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

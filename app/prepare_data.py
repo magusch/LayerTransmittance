@@ -11,9 +11,20 @@ class PrepareData:
     def __init__(self):
         pass
 
-    def datas(self, material):  # load materil's refractive index
+    def refractive_index_for_material(self, material):  # load materil's refractive index
         file = 'app/static/data/%s.csv' % (material)
         if os.path.isfile(file): return (pd.read_csv(file, sep=';'))
+
+
+    def refractive_index_for_wavelength(self, material, wavelength):
+        ri_all = self.refractive_index_for_material(material)
+        if ri_all is not None:
+            ri_all['wv_mean'] = abs(ri_all['wv'] - float(wavelength))
+            index = ri_all.where(ri_all['wv_mean'] == min(ri_all['wv_mean'])).first_valid_index()
+            answer = {'wv': float(ri_all['wv'][index]), 'n': float(ri_all['n'][index]), 'k': float(ri_all['k'][index])}
+        else:
+            answer = None
+        return answer
 
 
     def launch(self, general_data, layer_form_data, add_data, wit):
@@ -24,7 +35,7 @@ class PrepareData:
 
         elif wit == 'wv':  # wavelenght dependecy
             d, material = self.layer_wv(layer_form_data)
-            dts = [self.datas(val) for val in material.values()]
+            dts = [self.refractive_index_for_material(val) for val in material.values()]
             wv, n, k = self.interpolate(dts)
 
             angle_list = add_data['angle'].split(',')
