@@ -5,6 +5,7 @@ from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm
 
 from app.searching_plasmon import SearchingPlasmonPlace
 from app.prepare_data import PrepareData
+from app.saving_plot_new import TransmittancePlotterNew
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -90,5 +91,24 @@ def get_plasmon():
     return json.dumps(response)
 
 
+@app.route('/plot_new', methods=['GET', 'POST'])
+def plot_new():
+    data = request.form.to_dict()
+
+    # Prepare data from the form
+    prepare_data_class = PrepareData()
+    general_data, layer_form_data, depend_data, wit = prepare_data_class.divide_data(data)
+    parameters = prepare_data_class.get_parameters(general_data, layer_form_data, depend_data, wit=wit)
+
+    # Calculate and plot using the parameters from the form
+    plotter = TransmittancePlotterNew(**parameters)
+    fig, output_csv = plotter.run()
+
+    # Transform the constructed graph into html
+    plot_html = fig.to_html(full_html=False)
+
+    return render_template("plotly_index.html", plot=plot_html, output_csv=output_csv, title = 'The Graph New')
+
+
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

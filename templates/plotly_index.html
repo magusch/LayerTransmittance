@@ -1,0 +1,12 @@
+{% extends "header.html" %}
+{% block content %}
+<div class="graphic">{{ plot|safe }}
+</div>
+    <div style="padding: 25px">
+		Download in CSV format:<p>
+	{% for name,url in output_csv.items() %}
+        <p><b>{{name}}:</b> <a href={{url_for('static', filename='plot/'+url)}} download>Download</a>
+        </p>
+	{% endfor %}
+    </div>
+{% endblock %}

@@ -71,7 +71,8 @@
 <!-- Layer end -->
     <!--<a href="javascript:fill_all_refractive('#layers_form-');">Заполнить всё сразу для материала</a>-->
 <p>
-<input id="submit" name="submit" type="submit" class="button"></p>
+<button type="submit" class="button" formaction="{{ url_for('plotting') }}">Send (old)</button>
+  <button type="submit" class="button" formaction="{{ url_for('plot_new') }}">Send 2(New)</button>
 </form>
 
 
