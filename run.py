@@ -5,7 +5,7 @@ from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm
 
 from app.searching_plasmon import SearchingPlasmonPlace
 from app.prepare_data import PrepareData
-from app.saving_plot_new import TransmittancePlotterNew
+from app.saving_plot import TransmittancePlotter
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -50,16 +50,6 @@ def plasmon():
     return render_template('plasmon.html', title='Plasmon')
 
 
-@app.route('/plotting', methods=['POST'])
-def plotting():
-    data = request.form.to_dict()
-    data_class = PrepareData()
-    general_data, layer_form_data, depend_data, wit = data_class.divide_data(data)
-    mat, output_csv, image_path = data_class.launch(general_data, layer_form_data, depend_data, wit=wit)
-    image_path = url_for('static', filename='plot/' + image_path)
-    return render_template('answer.html', output_csv=output_csv, mat=mat, IMAGE=image_path, title = 'The Graph')
-
-
 @app.route('/imag_real', methods=['POST'])
 def imag_real():
     return render_template('imag_real.html')
@@ -91,8 +81,8 @@ def get_plasmon():
     return json.dumps(response)
 
 
-@app.route('/plot_new', methods=['GET', 'POST'])
-def plot_new():
+@app.route('/plotting', methods=['GET', 'POST'])
+def plotting():
     data = request.form.to_dict()
 
     # Prepare data from the form
@@ -101,7 +91,7 @@ def plot_new():
     parameters = prepare_data_class.get_parameters(general_data, layer_form_data, depend_data, wit=wit)
 
     # Calculate and plot using the parameters from the form
-    plotter = TransmittancePlotterNew(**parameters)
+    plotter = TransmittancePlotter(**parameters)
     fig, output_csv = plotter.run()
 
     # Transform the constructed graph into html
