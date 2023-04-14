@@ -140,8 +140,8 @@ class TransmittancePlotter:
             wv, output = self.het(d, ri)
 
         plt.ylabel(self.ylab[self.layer_params.y_label])
-        str_title = self.title_to_str()
-        plt.title(str_title)
+        # str_title = title_to_str(parametrs['title'])
+        # plt.title(str_title)
         plt.legend()  # title = parametrs['title']
         filename_plot = str(int(time.time())) + '.png'
         image_path = 'app/static/plot/' + filename_plot
