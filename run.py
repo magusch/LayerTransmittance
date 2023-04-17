@@ -9,10 +9,10 @@ from app.saving_plot import TransmittancePlotter
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-app = Flask(__name__, static_folder='/layer_transmittance/static/')
+app = Flask(__name__, static_folder='/layer_transmittance/app/static/')
 
 app.config.update(
-    UPLOADED_PATH='/layer_transmittance/', #os.path.join(basedir, 'app/static/plot'),
+    UPLOADED_PATH='/layer_transmittance/app/',
     WTF_CSRF_ENABLED= False )
 
 
