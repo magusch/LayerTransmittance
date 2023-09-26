@@ -10,13 +10,13 @@
                 q = $.parseJSON(response)
                 $(destElem+index+'-n').val(q.n)
                 $(destElem+index+'-k').val(q.k)
-                $(destElem+index).text(`Заполнено для ${material} на длине волны ${wavelength} нм`)
+                $(destElem+index).text(`Filled for ${material} at wavelength ${wavelength} nm`)
 
             }).fail(function() {
                 $(destElem+index+'-n').val('1')
                 $(destElem+index+'-k').val('0')
                 $(destElem+index+'-d').val('0')
-                $(destElem+index).text('Пустой слой, данные отсутствуют')
+                $(destElem+index).text('Empty layer, no data')
             });
         }
 
@@ -33,24 +33,20 @@
 <p><form method="POST" class='general' action="{{ url_for('plotting') }}">
 <!-- General form -->
 {{form.hidden_tag()}}
-   	<p>
-   <b> {{ form.n0.label }} </b>
-   <p>{{ form.n0(size=20) }}<p>
-   	  <b>{{ form.n_last.label }}:</b> <p>{{ form.n_last(size=20) }} <i> (one or several, example: "1.5" or "1.5, 1.6, 1.7)</i>
-    <p> <b>Polarazation:</b><p>
+   	<p><b> {{ form.n0.label }} </b><br>{{ form.n0(size=20) }}
+    <p><b> {{ form.n_last.label }}:</b><br>{{ form.n_last(size=20) }} <i> (one or several, example: "1.5" or "1.5, 1.6, 1.7)</i>
+    <p> <h5>Polarazation:</h5>
     	{{ form.polarization }}
     <p>
-    	Choose what plot: <p>
-    {{ form.y_label }}
+    	 Which to display: <br> {{ form.y_label }}
 
 <!-- General end -->
 
 <!-- Angle form -->
 
 {% for field in angle_form if field.widget.input_type != 'hidden' %}
-   <b> {{ field.label }}:</b> &#8195;
+    <b> {{ field.label }}:</b> &#8195;
     {{ field }} <p>
-     
 {% endfor %}
 
 <!-- Angle end -->
@@ -60,25 +56,28 @@
 {% for form_lay in layer_form %}
 {{ form_lay.hidden_tag() }}
 
-<h3>Layer {{loop.index}}</h3> <p>
+<h4>Layer {{loop.index}}</h4> <p>
 <b>{{form_lay.n.label}}:</b> &#8195;{{form_lay.n}} &#8195;
 <b>{{form_lay.k.label}}:</b> &#8195;{{form_lay.k}} &#8195;
 <b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <i> (one or several)</i> <p><p>
 
     <select id="layers_form-{{ loop.index-1 }}-material" name="layers_form-0-material"><option value="empty">Empty</option><option value="Ag">Ag</option><option selected="" value="Zn">Zn</option><option value="Chr">Chr</option><option value="Al">Al</option><option value="Al2O3">Al2O3</option><option value="Al2O3_1984">Al2O3 (1984)</option><option value="Au">Au</option><option value="ZnO">ZnO</option><option value="MgF2">MgF2</option><option value="SiO">SiO</option><option value="Au_44nm">Au_44nm</option></select>
-	 <a href="javascript:get_refractive('#layers_form-', {{ loop.index-1 }});">Заполнить для материала</a> <i style="size: 8px;" id="layers_form-{{ loop.index-1 }}"></i>
+	 <a href="javascript:get_refractive('#layers_form-', {{ loop.index-1 }});">Fill for the material</a> <i style="size: 8px;" id="layers_form-{{ loop.index-1 }}"></i>
 {% endfor %}
-<!-- Layer end -->
-    <!--<a href="javascript:fill_all_refractive('#layers_form-');">Заполнить всё сразу для материала</a>-->
+
 <p>
 <button type="submit" class="button" formaction="{{ url_for('plotting') }}">Send (old)</button>
   <button type="submit" class="button" formaction="{{ url_for('plot_new') }}">Send 2(New)</button>
 </form>
 
 
-
-<p><b>Другое количество слоёв:</b> <a href="{{ url_for('angle', number_layers=3) }}">3 слоя</a>, <a href="{{ url_for('angle', number_layers=4) }}">4 слоя</a>,
-    <a href="{{ url_for('angle', number_layers=5) }}">5 слоёв</a>, <a href="{{ url_for('angle', number_layers=6) }}">6 слоёв</a></p>.
+<div style="padding: 25px">
+    <h4>Other number of layers:</h4>
+    <a href="{{ url_for('angle', number_layers=3) }}">3 layers</a>,
+    <a href="{{ url_for('angle', number_layers=4) }}">4 layers</a>,
+    <a href="{{ url_for('angle', number_layers=5) }}">5 layers</a>,
+    <a href="{{ url_for('angle', number_layers=6) }}">6 layers</a>.
+</div>
 
 
 

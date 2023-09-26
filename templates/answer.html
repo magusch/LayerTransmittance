@@ -3,9 +3,9 @@
 
 	<img src="{{IMAGE}}"><p>
 	<p>
-		Скачать в формате CSV:<p>
+		Download in CSV:<p>
 	{% for name,url in output_csv.items() %}	
-	<b>{{name}}:</b> <a href={{url_for('static', filename='plot/'+url)}} download>Скачать </a>
+	<b>{{name}}:</b> <a href={{url_for('static', filename='plot/'+url)}} download>Download </a>
 	<p>
         <p></p>
 	{% endfor %}

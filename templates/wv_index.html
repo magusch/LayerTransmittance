@@ -6,41 +6,47 @@
 
 <!-- General form -->
 {{form.hidden_tag()}}
-   	<p>
-   <b> {{ form.n0.label }} </b>
-   <p>{{ form.n0(size=20) }}<p>
-   	  <b>{{ form.n_last.label }}:</b><p>{{ form.n_last(size=20) }} <i> (one or several)</i>
-    <p> <b>Polarazation:</b><p>
-    	{{ form.polarization }}
-    <p>
-    	Choose what plot: <p>
-    {{ form.y_label }}
+      <p>
+          <b> {{ form.n0.label }} </b> <br>{{ form.n0(size=20) }}
+      </p>
+      <p>
+          <b>{{ form.n_last.label }}:</b><br>{{ form.n_last(size=20) }} <i> (one or several)</i>
+      </p>
+      <p>
+          <b>Polarization:</b><br> {{ form.polarization }}
+      </p>
+      <p>
+          Which to display: <br> {{ form.y_label }}
+      </p>
 
 <!-- Wavelength form -->
-
-<b>{{wv_form.angle.label}}:</b> &#8195; {{wv_form.angle}} <i> (one or several)</i>
+<p>
+    <b>{{wv_form.angle.label}}:</b> &#8195; {{wv_form.angle}} <i> (one or several)</i>
+</p>
 
 <!-- Layer form -->
 <p>
-{% for form_lay in layer_form %}
+    {% for form_lay in layer_form %}
 {{ form_lay.hidden_tag() }}
 
-<h3>Layer {{loop.index}}</h3> <p>
+<h5>Layer {{loop.index}}</h5>
 <b>{{form_lay.material.label}}:</b> &#8195;{{form_lay.material}}  &#8195;
 <b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <i> (one or several)</i><p>
 
 {% endfor %}
-
-  <button type="submit" class="button" formaction="{{ url_for('plotting') }}">Send (old version)</button>
-  <button type="submit" class="button" formaction="{{ url_for('plot_new') }}">Send 2(New)</button>
-
+<p>
+  <button type="submit" class="button" formaction="{{ url_for('plotting') }}" style="height: 100%">Run (Old – matplotlib)</button>
+  <button type="submit" class="button" formaction="{{ url_for('plot_new') }}" style="height: 100%">Run 2 (New – Plotly)</button>
+  </p>
 </form>
 
-<p><b>Другое количество слоёв:</b>
-    <a href="{{ url_for('wavelength', number_layers=3) }}">3 слоя</a>,
-    <a href="{{ url_for('wavelength', number_layers=4) }}">4 слоя</a>,
-    <a href="{{ url_for('wavelength', number_layers=5) }}">5 слоёв</a>,
-    <a href="{{ url_for('wavelength', number_layers=6) }}">6 слоёв</a></p>.
+<div style="padding: 25px">
+    <h4>Other number of layers:</h4>
+    <a href="{{ url_for('wavelength', number_layers=3) }}">3 layers</a>,
+    <a href="{{ url_for('wavelength', number_layers=4) }}">4 layers</a>,
+    <a href="{{ url_for('wavelength', number_layers=5) }}">5 layers</a>,
+    <a href="{{ url_for('wavelength', number_layers=6) }}">6 layers</a>
+</div>.
 
 
 {% endblock %}
