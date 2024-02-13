@@ -61,7 +61,11 @@
 <b>{{form_lay.k.label}}:</b> &#8195;{{form_lay.k}} &#8195;
 <b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <i> (one or several)</i> <p><p>
 
-    <select id="layers_form-{{ loop.index-1 }}-material" name="layers_form-0-material"><option value="empty">Empty</option><option value="Ag">Ag</option><option selected="" value="Zn">Zn</option><option value="ZnS">ZnS</option><option value="Chr">Chr</option><option value="Al">Al</option><option value="Al2O3">Al2O3</option><option value="Al2O3_1984">Al2O3 (1984)</option><option value="Au">Au</option><option value="ZnO">ZnO</option><option value="MgF2">MgF2</option><option value="SiO">SiO</option><option value="Au_44nm">Au_44nm</option></select>
+    <select id="layers_form-{{ loop.index-1 }}-material" name="layers_form-0-material">
+        {% for material in materials %}
+            <option value="{{ material }}">{{ ' '.join(material.split('_')) }}</option>
+        {% endfor %}
+    </select>
 	 <a href="javascript:get_refractive('#layers_form-', {{ loop.index-1 }});">Fill for the material</a> <i style="size: 8px;" id="layers_form-{{ loop.index-1 }}"></i>
 {% endfor %}
 

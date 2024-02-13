@@ -7,7 +7,7 @@ from app.searching_plasmon import SearchingPlasmonPlace
 from app.prepare_data import PrepareData
 from app.saving_plot_new import TransmittancePlotterNew
 
-from utils.materials_ri import download_file, prepare_material_file, divide_url_ri
+from utils.materials_ri import available_materials as am, download_file, prepare_material_file, divide_url_ri
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
