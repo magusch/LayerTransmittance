@@ -1,11 +1,13 @@
 import os, json
 from flask import Flask, render_template, request, url_for, redirect, flash
 
-from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm
+from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm, AddMaterialForm
 
 from app.searching_plasmon import SearchingPlasmonPlace
 from app.prepare_data import PrepareData
 from app.saving_plot_new import TransmittancePlotterNew
+
+from utils.materials_ri import download_file, prepare_material_file, divide_url_ri
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -42,7 +44,7 @@ def angle(number_layers=4):
     angle_form = AngleForm(prefix="ang_")
         
     return render_template('angle.html', form=form, layer_form=layers_forms, angle_form=angle_form,
-                           title='Angle dependence')
+                           title='Angle dependence', materials = am())
 
 
 @app.route('/plasmon', methods=['GET', 'POST'])
@@ -75,6 +77,25 @@ def ajax_refractive_for_material(material):
         return json.dumps(answer)
     else:
         return json.dumps({'error':'None material.'})
+
+
+@app.route('/add_material/', methods=['GET', 'POST']) #<string:materials>
+def add_material():
+
+    if request.method == 'POST':
+        url = request.form['url_ri']
+        if '.csv' not in url:
+            ri_url_dict = divide_url_ri(url)
+            url = f"https://refractiveindex.info/tmp/database/data-nk/{ri_url_dict['shelf']}/{ri_url_dict['book']}/{ri_url_dict['page']}.csv"
+            material = ri_url_dict['book']
+        else:
+            material = url.split('/')[-2]
+        download_file(url, material)
+        prepare_material_file()
+        return redirect(url_for('add_material'))  # Redirect to the index page after download
+
+    form = AddMaterialForm()
+    return render_template('add_material.html', title='Add Material', form=form)
 
 
 @app.route('/get_plasmon')

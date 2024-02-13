@@ -40,3 +40,7 @@ class PlasmonForm(FlaskForm):
     n1 = FloatField('n1', default=1.3)
     k1 = FloatField('k1', default=0)
     n2 = FloatField('n_env', default=1.0)
+
+
+class AddMaterialForm(FlaskForm):
+    url_ri = StringField('URL to refractiveindex', default='https://refractiveindex.info/?shelf=main&book=ZrO2&page=Bodurov')
