@@ -20,8 +20,10 @@ app.config.update(
 
 def layers(n=3):
     layer_form = []
+    choices = list(map(lambda x: (x, x), am()))
     for i in range(n):
         layer_form.append(LayerForm(prefix="layers_form-%s" %(i)))
+        layer_form[-1].material.choices = choices
     return layer_form
 
 
