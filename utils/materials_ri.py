@@ -3,8 +3,9 @@ import requests
 
 import numpy as np
 
-material_folder = 'app/static/data'
-raw_material_folder = 'app/static/raw_materials'
+material_folder = '/layer_transmittance/app/static/data'
+uploaded_material_folder = '/layer_transmittance/app/uploads/data'
+raw_material_folder = '/layer_transmittance/app/uploads/raw_materials'
 
 def available_materials():
     materials = ['empty']
@@ -12,6 +13,12 @@ def available_materials():
         if file.endswith('.csv'):
             material_name = file.split('.csv')[0]
             materials.append(material_name)
+
+    for file in os.listdir(uploaded_material_folder):
+        if file.endswith('.csv'):
+            material_name = file.split('.csv')[0]
+            materials.append(material_name)
+
 
     return materials
 
@@ -68,7 +75,7 @@ def transform_csv(file):
     combined_data = np.column_stack((wl_common * 1000, n_interpolated, k_interpolated))
 
     # Save to CSV
-    save_path = f"{material_folder}/{file.split('/')[-1].split('.')[0]}_ri.csv"
+    save_path = f"{uploaded_material_folder}/{file.split('/')[-1].split('.')[0]}_ri.csv"
     np.savetxt(save_path, combined_data, delimiter=';', header='wv;n;k', comments='')
     os.remove(file)
 

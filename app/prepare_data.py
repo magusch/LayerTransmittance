@@ -14,6 +14,8 @@ class PrepareData:
     def refractive_index_for_material(self, material):  # load materil's refractive index
         file = 'app/static/data/%s.csv' % (material)
         if os.path.isfile(file): return (pd.read_csv(file, sep=';'))
+        file = '/layer_transmittance/app/uploads/data/%s.csv' % (material)
+        if os.path.isfile(file): return (pd.read_csv(file, sep=';'))
 
 
     def refractive_index_for_wavelength(self, material, wavelength):

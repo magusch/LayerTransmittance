@@ -14,7 +14,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__, static_folder='/layer_transmittance/app/static/')
 
 app.config.update(
-    UPLOADED_PATH='/layer_transmittance/app/', #os.path.join(basedir, 'app/static/plot'),
+    UPLOADED_PATH='/layer_transmittance/app/uploads/', #os.path.join(basedir, 'app/static/plot'),
     WTF_CSRF_ENABLED= False )
 
 
@@ -83,7 +83,6 @@ def ajax_refractive_for_material(material):
 
 @app.route('/add_material/', methods=['GET', 'POST']) #<string:materials>
 def add_material():
-
     if request.method == 'POST':
         url = request.form['url_ri']
         if '.csv' not in url:
@@ -94,7 +93,6 @@ def add_material():
             material = url.split('/')[-2]
         download_file(url, material)
         prepare_material_file()
-        return redirect(url_for('add_material'))  # Redirect to the index page after download
 
     form = AddMaterialForm()
     return render_template('add_material.html', title='Add Material', form=form)
