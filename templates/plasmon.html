@@ -10,13 +10,13 @@
                 q = $.parseJSON(response)
                 $(destElem+index+'-n').val(q.n)
                 $(destElem+index+'-k').val(q.k)
-                $(destElem+index).text(`Показатель преломления для ${material} на длине волны ${wavelength} нм`)
+                $(destElem+index).text(`Refractive index for ${material} at wavelength ${wavelength} nm`)
 
             }).fail(function() {
                 $(destElem+index+'-n').val('1')
                 $(destElem+index+'-k').val('0')
                 $(destElem+index+'-d').val('0')
-                $(destElem+index).text('Пустой слой, данные отсутствуют')
+                $(destElem+index).text('Empty layer, no data')
             });
         }
 
@@ -27,12 +27,12 @@
             k1 = $('#metal-0-k').val()
             n2 = $('#n2').val()
 
-            $(destElem).text('Ответ: ')
-            $('#loading').text('Загрузка')
+            $(destElem).text('Answer: ')
+            $('#loading').text('Loading...')
             url = `/get_plasmon?wv=${wavelength}&n0=${n0}&n1=${n1}&k1=${k1}&n2=${n2}`
             $.get(url).done(function(response) {
                 q = $.parseJSON(response)
-                $(destElem).append(`Длина волны: ${q.d_met}, минимум при угле падения света: ${q.theta} радиан`);
+                $(destElem).append(`Wavelength: ${q.d_met}, minimum at angle of incidence of light: ${q.theta} radian`);
             });
         }
 
@@ -42,29 +42,27 @@
 <!-- General form -->
 <!-- Angle form -->
 <p>
-<b> <label for="ang_wv">Длина Волны, нм</label>:</b>
+<b> <label for="ang_wv">Wavelength, nm</label>:</b>
     <input id="ang_wv" name="ang_wv" type="text" value="403.3"></p>
 <br>
 <p><b><label for="n0">n0</label>:</b>
 <input id="n0" name="n0" type="text" value="1.512"></p>
 
 <!-- Angle end -->
-    <h4>Металл:</h4>
+    <h4>Metal:</h4>
 <b><label for="metal-0-n">n1</label>:</b>
 <input id="metal-0-n" name="metal-0-n" type="text" value="1">
 <b><label for="metal-0-k">k1</label>:</b>
 <input id="metal-0-k" name="metal-0-k" type="text" value="0">
 
     <p><select id="metal-0-material" name="metal-0-material"><option value="empty">Empty</option><option value="Ag">Ag</option><option selected="" value="Zn">Zn</option><option value="Chr">Chr</option><option value="Al">Al</option><option value="Au">Au</option><option value="ZnO">ZnO</option><option value="MgF2">MgF2</option><option value="SiO">SiO</option><option value="Au_44nm">Au_44nm</option></select>
-	 <a href="javascript:get_refractive('#metal-', 0);">Заполнить для материала</a>  <i style="size: 8px;" id="metal-0"></i></p>
+	 <a href="javascript:get_refractive('#metal-', 0);">Fill in for material</a>  <i style="size: 8px;" id="metal-0"></i></p>
 
-    <h4>Среда:</h4><p><b><label for="n2">n2</label>:</b>
-<input id="n2" name="n2" type="text" value="1.33">  <i> <a href="javascript:$('#n2').val(1.0);">Газ</a> <a href="javascript:$('#n2').val(1.33);">Вода</a></p></i>
+    <h4>Medium:</h4><p><b><label for="n2">n2</label>:</b>
+<input id="n2" name="n2" type="text" value="1.33">  <i> <a href="javascript:$('#n2').val(1.0);">Vacuum</a> <a href="javascript:$('#n2').val(1.33);">Water</a></p></i>
 
-<!-- Layer end -->
-    <!--<a href="javascript:fill_all_refractive('#layers_form-');">Заполнить всё сразу для материала</a>-->
 <p>
-<input id="submit" name="submit" type="submit" class="button"></p>
+    <input id="submit" name="submit" type="submit" class="button"></p>
 </form>
 
 <p>

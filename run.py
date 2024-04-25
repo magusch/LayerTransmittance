@@ -1,25 +1,29 @@
 import os, json
 from flask import Flask, render_template, request, url_for, redirect, flash
 
-from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm
+from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm, AddMaterialForm
 
 from app.searching_plasmon import SearchingPlasmonPlace
 from app.prepare_data import PrepareData
 from app.saving_plot import TransmittancePlotter
+
+from utils.materials_ri import available_materials as am, download_file, prepare_material_file, divide_url_ri
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__, static_folder='/layer_transmittance/app/static/')
 
 app.config.update(
-    UPLOADED_PATH='/layer_transmittance/app/',
+    UPLOADED_PATH='/layer_transmittance/app/uploads/', #os.path.join(basedir, 'app/static/plot'),
     WTF_CSRF_ENABLED= False )
 
 
 def layers(n=3):
     layer_form = []
+    choices = list(map(lambda x: (x, x), am()))
     for i in range(n):
         layer_form.append(LayerForm(prefix="layers_form-%s" %(i)))
+        layer_form[-1].material.choices = choices
     return layer_form
 
 
@@ -42,12 +46,22 @@ def angle(number_layers=4):
     angle_form = AngleForm(prefix="ang_")
         
     return render_template('angle.html', form=form, layer_form=layers_forms, angle_form=angle_form,
-                           title='Angle dependence')
+                           title='Angle dependence', materials = am())
 
 
 @app.route('/plasmon', methods=['GET', 'POST'])
 def plasmon():
     return render_template('plasmon.html', title='Plasmon')
+
+
+@app.route('/plotting', methods=['POST'])
+def plotting():
+    data = request.form.to_dict()
+    data_class = PrepareData()
+    general_data, layer_form_data, depend_data, wit = data_class.divide_data(data)
+    mat, output_csv, image_path = data_class.launch(general_data, layer_form_data, depend_data, wit=wit)
+    image_path = url_for('static', filename='plot/' + image_path)
+    return render_template('answer.html', output_csv=output_csv, mat=mat, IMAGE=image_path, title = 'The Graph')
 
 
 @app.route('/imag_real', methods=['POST'])
@@ -65,6 +79,23 @@ def ajax_refractive_for_material(material):
         return json.dumps(answer)
     else:
         return json.dumps({'error':'None material.'})
+
+
+@app.route('/add_material/', methods=['GET', 'POST']) #<string:materials>
+def add_material():
+    if request.method == 'POST':
+        url = request.form['url_ri']
+        if '.csv' not in url:
+            ri_url_dict = divide_url_ri(url)
+            url = f"https://refractiveindex.info/tmp/database/data-nk/{ri_url_dict['shelf']}/{ri_url_dict['book']}/{ri_url_dict['page']}.csv"
+            material = ri_url_dict['book']
+        else:
+            material = url.split('/')[-2]
+        download_file(url, material)
+        prepare_material_file()
+
+    form = AddMaterialForm()
+    return render_template('add_material.html', title='Add Material', form=form)
 
 
 @app.route('/get_plasmon')
