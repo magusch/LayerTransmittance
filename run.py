@@ -5,7 +5,7 @@ from forms import GeneralForm, AngleForm, LayerForm, WavelengthForm, AddMaterial
 
 from app.searching_plasmon import SearchingPlasmonPlace
 from app.prepare_data import PrepareData
-from app.saving_plot_new import TransmittancePlotterNew
+from app.saving_plot import TransmittancePlotter
 
 from utils.materials_ri import available_materials as am, download_file, prepare_material_file, divide_url_ri
 
@@ -112,8 +112,8 @@ def get_plasmon():
     return json.dumps(response)
 
 
-@app.route('/plot_new', methods=['GET', 'POST'])
-def plot_new():
+@app.route('/plotting', methods=['GET', 'POST'])
+def plotting():
     data = request.form.to_dict()
 
     # Prepare data from the form
@@ -122,7 +122,7 @@ def plot_new():
     parameters = prepare_data_class.get_parameters(general_data, layer_form_data, depend_data, wit=wit)
 
     # Calculate and plot using the parameters from the form
-    plotter = TransmittancePlotterNew(**parameters)
+    plotter = TransmittancePlotter(**parameters)
     fig, output_csv = plotter.run()
 
     # Transform the constructed graph into html

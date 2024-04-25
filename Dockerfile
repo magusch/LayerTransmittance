@@ -3,7 +3,6 @@ RUN apt-get update
 RUN apt-get install -y g++ zlib1g-dev libjpeg-dev make
 RUN pip install --upgrade pip
 RUN pip install numpy==1.23.5
-RUN pip install matplotlib==3.6.2
 RUN pip install pandas==1.5.2
 RUN pip install scipy==1.8.0
 RUN apt-get install -y \

@@ -34,10 +34,9 @@
 <b>{{form_lay.d.label}}:</b>&#8195;{{form_lay.d}} <i> (one or several)</i><p>
 
 {% endfor %}
-<p>
-  <button type="submit" class="button" formaction="{{ url_for('plotting') }}" style="height: 100%">Run (Old – matplotlib)</button>
-  <button type="submit" class="button" formaction="{{ url_for('plot_new') }}" style="height: 100%">Run 2 (New – Plotly)</button>
-  </p>
+
+  <button type="submit" class="button" formaction="{{ url_for('plotting') }}">Send</button>
+
 </form>
 
 <div style="padding: 25px">
