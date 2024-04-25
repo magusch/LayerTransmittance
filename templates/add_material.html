@@ -1,0 +1,16 @@
+{% extends "header.html" %}
+{% block content %}
+
+<p>
+    <form method="POST" class='general' action="{{ url_for('add_material') }}">
+        <p>
+        <div>
+            Put a link to any material from the <a href="https://refractiveindex.info/" blank>Refractive Index</a> site in the box:
+        <b> {{ form.url_ri(size=100) }} </b>
+        </div>
+  <button type="submit" class="button" formaction="{{ url_for('add_material') }}">Add Material</button>
+
+</form>
+
+
+{% endblock %}
