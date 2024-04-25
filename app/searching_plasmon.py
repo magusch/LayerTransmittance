@@ -15,10 +15,10 @@ class SearchingPlasmonPlace:
         theta = self.parameters['theta']
 
         eps_g = n[0] ** 2
-        eps_met = np.array((n[1] + self.j * k) ** 2, dtype=np.complex)
-        eps_de1 = np.array((n[2] + self.j * k2) ** 2, dtype=np.complex)
+        eps_met = np.array((n[1] + self.j * k) ** 2, dtype=complex)
+        eps_de1 = np.array((n[2] + self.j * k2) ** 2, dtype=complex)
 
-        sin = np.array(np.sin(theta), dtype=np.complex)
+        sin = np.array(np.sin(theta), dtype=complex)
         kx = np.sqrt(eps_g) * sin
         kz = [np.array((2 * self.pi / wv) * np.sqrt(eps_g - kx ** 2))]
         kz.append((2 * self.pi / wv) * np.sqrt(eps_met - kx ** 2))

@@ -23,10 +23,10 @@ class LayerTransmittanceCalculator:
 
     def _get_eps(self, i):
         try:
-            eps = np.array((self.n[i] + 1j * self.k[i]) ** 2, dtype=np.complex)
+            eps = np.array((self.n[i] + 1j * self.k[i]) ** 2, dtype=complex)
         except Exception as e:
             print(e)
-            eps = np.array((self.n[i]) ** 2, dtype=np.complex)
+            eps = np.array((self.n[i]) ** 2, dtype=complex)
         return eps
 
     def _get_kz(self, i, kx):
@@ -69,14 +69,15 @@ class LayerTransmittanceCalculator:
 
             matr = np.array([
                 [ np.array(1/t[i]),     np.array(r[i]/t[i]) ],
-                [ np.array(r[i]/t[i]),  0                   ]])
+                [ np.array(r[i]/t[i]),  0                   ]],
+                dtype=object)
             matr[1][1] = 1/t[i]
             self.M = np.dot(self.M, np.dot(matr_delta[io], matr))
 
             matr_delta[i] = np.array([
                     [ np.exp(-1j*be[i]),  0                ],
                     [ 0,                  np.exp(1j*be[i]) ]
-            ])
+            ], dtype=object)
             io = i
 
         return self.M, kz
