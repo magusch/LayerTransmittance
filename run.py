@@ -54,16 +54,6 @@ def plasmon():
     return render_template('plasmon.html', title='Plasmon')
 
 
-@app.route('/plotting', methods=['POST'])
-def plotting():
-    data = request.form.to_dict()
-    data_class = PrepareData()
-    general_data, layer_form_data, depend_data, wit = data_class.divide_data(data)
-    mat, output_csv, image_path = data_class.launch(general_data, layer_form_data, depend_data, wit=wit)
-    image_path = url_for('static', filename='plot/' + image_path)
-    return render_template('answer.html', output_csv=output_csv, mat=mat, IMAGE=image_path, title = 'The Graph')
-
-
 @app.route('/imag_real', methods=['POST'])
 def imag_real():
     return render_template('imag_real.html')

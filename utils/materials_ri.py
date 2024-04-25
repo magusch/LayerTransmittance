@@ -9,18 +9,24 @@ raw_material_folder = '/layer_transmittance/app/uploads/raw_materials'
 
 def available_materials():
     materials = ['empty']
-    for file in os.listdir(material_folder):
+
+    folder_with_material = material_folder
+    if not os.path.exists(material_folder):
+       folder_with_material = 'app/static/data'
+
+    for file in os.listdir(folder_with_material):
         if file.endswith('.csv'):
             material_name = file.split('.csv')[0]
             materials.append(material_name)
 
-    for file in os.listdir(uploaded_material_folder):
-        if file.endswith('.csv'):
-            material_name = file.split('.csv')[0]
-            materials.append(material_name)
-
+    if os.path.exists(uploaded_material_folder):
+        for file in os.listdir(uploaded_material_folder):
+            if file.endswith('.csv'):
+                material_name = file.split('.csv')[0]
+                materials.append(material_name)
 
     return materials
+
 
 def download_file(url, material=''):
     filename = os.path.join(raw_material_folder, material + '_' + os.path.basename(url))
